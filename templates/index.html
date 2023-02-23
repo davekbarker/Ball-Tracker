@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Flask App</title>
+  </head>
+  <body>
+    <h1>My Flask App</h1>
+    <form method="POST" action="/add_person">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name"><br>
+      <label for="age">Age:</label>
+      <input type="text" id="age" name="age"><br>
+      <input type="submit" value="Add Person">
+    </form>
+      <h1>Track My Balls</h1>
+	<button class="my-button" onclick="location.href='{{ url_for('play_golf') }}'">Play Golf</button>
+      <br>
+      <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Range Time</button>
+      <br>
+	  <button class="my-button" onclick="location.href='{{ url_for('current_stats') }}'">Current Stats</button>
+
+    <hr>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Age</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

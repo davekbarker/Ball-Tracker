@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Stats</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Current Stats</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Club Name</th>
+                <th style ="width: 50%">Direction</th>
+<!--                <th>Distance</th>-->
+                <th>Hits</th>
+            </tr>
+        </thead>
+        <tbody>
+<!--            {% for club in clubs %}-->
+<!--            <tr>-->
+<!--                <td>{{ club.name }}</td>-->
+<!--                <td>{{ club.direction }}</td>-->
+<!--                <td style="width: 4em;">{{ club.distance }}</td>-->
+<!--                <td>{{ club.hits }}</td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+          {% for club in clubs %}
+            <tr>
+                <td>{{ club[0] }}</td>
+                <td><meter min="0" max="100" value="{{ club[1] }}" style="width: 200px;"></meter></td>
+<!--            This is the distance, add when ready    -->
+<!--                <td>{{ club[2] }}</td>-->
+                <td>{{ club[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br><br><br>
+    <form action="/" method="GET">
+        <button type="submit">Back to Home</button>
+    </form>
+</body>
+</html>

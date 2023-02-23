@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Golf Range Time</title>
+</head>
+<body>
+ <h1>Golf Range Time</h1>
+
+    <form action="/submit_direction" method="POST">
+        <label for="club-select">Select a Club:</label>
+        <br>
+        <select id="club-select" name="club_name">
+            {% for row in club_rows %}
+                <option value="{{ row[0] }}">{{ row[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <label for="club-direction-range">Average Direction:</label>
+        <br>
+        <input type="range" id="club-direction-range" min="0" max="100" value="50" name="club_direction">
+        <br><br>
+        <input type="submit" value="Submit Direction">
+    </form>
+
+    <br><br><br>
+    <form action="/" method="GET">
+        <button type="submit">Back to Home</button>
+    </form>
+
+</body>
+</html>

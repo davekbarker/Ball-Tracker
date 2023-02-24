@@ -50,5 +50,12 @@
     <form action="/" method="GET">
         <button type="submit">Back to Home</button>
     </form>
+    <br>
+    <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Range Time</button>
+    <br><br><br>
+    <form action="{{ url_for('clear_stats') }}" method="get">
+        <button type="submit">Clear Stats</button>
+    </form>
+
 </body>
 </html>

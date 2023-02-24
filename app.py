@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, render_template, request, redirect, g, url_for
 import sqlite3
 
@@ -7,13 +9,12 @@ app = Flask(__name__)
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect('my_database.db')
-        # g.db = sqlite3.connect('clubs.db')
+        #g.db = sqlite3.connect('clubs.db')
     return g.db
 
 
 def close_db(e=None):
     db = g.pop('db', None)
-
     if db is not None:
         db.close()
 
@@ -33,7 +34,6 @@ def get_cursor():
 
 def close_cursor(e=None):
     cursor = g.pop('cursor', None)
-
     if cursor is not None:
         cursor.close()
 
@@ -55,21 +55,21 @@ def index():
     return render_template('index.html', rows=rows)
 
 
-# Define a route for adding a person
-@app.route('/add_person', methods=['POST'])
-def add_person():
-    # Retrieve the form data
-    name = request.form['name']
-    age = request.form['age']
-    print('Adding person:', name, age) # Add this line to print the data
-
-    # Insert the new person into the database
-    cursor = get_cursor()
-    cursor.execute("INSERT INTO my_table (name, age) VALUES (?, ?)", (name, age))
-    get_db().commit()
-
-    # Redirect back to the index page
-    return redirect('/')
+# # Define a route for adding a person
+# @app.route('/add_person', methods=['POST'])
+# def add_person():
+#     # Retrieve the form data
+#     name = request.form['name']
+#     age = request.form['age']
+#     print('Adding person:', name, age) # Add this line to print the data
+#
+#     # Insert the new person into the database
+#     cursor = get_cursor()
+#     cursor.execute("INSERT INTO my_table (name, age) VALUES (?, ?)", (name, age))
+#     get_db().commit()
+#
+#     # Redirect back to the index page
+#     return redirect('/')
 
 # @app.route('/')
 # def index():
@@ -94,46 +94,78 @@ def range_time():
     # Close the connection
     conn.close()
     selected_club = request.args.get('club_name')  # get the selected club from the URL query string
-    # Render the range_time.html template with the club names
-    # return render_template('range_time.html', club_rows=club_rows, selected_club=selected_club)
     return render_template('range_time.html', club_rows=club_rows)
-    # return render_template('range_time.html')
 
 
-# Define a route for submitting the club direction
+# @app.route('/submit_direction', methods=['POST'])
+# def submit_direction():
+#     if request.method == 'POST':
+#         club_id = int(request.form['club_name'])
+#         direction = int(request.form['direction'])
+#         old_direction = direction/2
+#         # hits = int(request.form['hits'])
+#         print(club_id, direction, old_direction)
+#
+#         conn = sqlite3.connect('clubs.db')
+#
+#         c = conn.cursor()
+#         # c.execute("SELECT hits FROM golf_clubs")
+#         # c.execute("SELECT hits from golf_clubs WHERE id = hits", (club_id))
+#         # row = c.fetchone()
+#         # hits = row[1]
+#
+#
+#
+#         try:
+#
+#
+#             # Increment the hits column by 1
+#             c.execute("UPDATE golf_clubs SET hits = hits + 1 WHERE id = ?", (club_id,))
+#             # Update the direction column
+#             print(direction)
+#             direction = (direction + old_direction)
+#             print(direction)
+#             c.execute("UPDATE golf_clubs SET direction = ? WHERE id = ?", (direction, club_id))
+#             conn.commit()
+#             message = "Club direction has been updated."
+#         except:
+#             conn.rollback()
+#             message = "Error updating database: {}".format(sys.exc_info()[0])
+#         finally:
+#             conn.close()
+#
+#         return redirect(url_for('range_time', club_name=club_id, msg=message))
+
+#<<<<<<<<<<THIS ONE WORKS>>>>>>>>>>>
 @app.route('/submit_direction', methods=['POST'])
 def submit_direction():
+    if request.method == 'POST':
+        club_id = int(request.form['club_name'])
+        new_direction = int(request.form['direction'])
 
-    # Retrieve the form data
-    club_id = request.form['club_name']
-    direction = request.form['club_direction']
+        conn = sqlite3.connect('clubs.db')
+        c = conn.cursor()
 
-    print(club_id, direction)
+        try:
+            # Retrieve the current direction and hits values for the selected club
+            c.execute("SELECT direction, hits FROM golf_clubs WHERE id = ?", (club_id,))
+            current_direction, hits = c.fetchone()
 
-    # Convert the direction to integer
-    direction = int(direction)
+            # Calculate the new direction based on the current direction, number of hits, and new direction
+            new_direction = (current_direction * hits + new_direction) / (hits + 1)
 
-    # Add 1 hit to the selected club
-    conn = sqlite3.connect('clubs.db')
-    c = conn.cursor()
-    c.execute("UPDATE golf_clubs SET hits = hits + 1 WHERE id = ?", (club_id,))
-    conn.commit()
+            # Increment the hits column by 1 and update the direction column
+            c.execute("UPDATE golf_clubs SET hits = hits + 1, direction = ? WHERE id = ?", (new_direction, club_id))
 
-    # Calculate the new average direction and update the selected club
-    c.execute("SELECT direction, hits FROM golf_clubs WHERE id = ?", (club_id,))
-    row = c.fetchone()
-    current_direction = row[0]
-    hits = row[1]
-    new_direction = int((current_direction * hits + direction) / (hits + 1))
-    # new_direction = (current_direction * hits + direction) / (hits + 1)
-    c.execute("UPDATE golf_clubs SET direction = ? WHERE id = ?", (new_direction, club_id))
-    conn.commit()
+            conn.commit()
+            message = "Club direction has been updated."
+        except:
+            conn.rollback()
+            message = "Error updating database: {}".format(sys.exc_info()[0])
+        finally:
+            conn.close()
 
-    # Close the connection
-    conn.close()
-
-    # Redirect back to the range time page
-    return redirect(url_for('range_time', club_name=club_id))
+        return redirect(url_for('range_time', club_name=club_id, msg=message))
 
 
 @app.route('/current_stats')
@@ -144,6 +176,52 @@ def current_stats():
     rows = c.fetchall()
     conn.close()
     return render_template('current_stats.html', clubs=rows)
+
+
+# @app.route('/clear_stats', methods=['GET', 'POST'])
+# def clear_stats():
+#     conn = sqlite3.connect('clubs.db')
+#     c = conn.cursor()
+#
+#     if request.method == 'POST':
+#         club_name = request.form['club_name']
+#         c.execute("UPDATE golf_clubs SET direction = ?, distance = ?, hits = ? WHERE name = ?", (None, None, None, club_name))
+#         conn.commit()
+#         return redirect(url_for('range_time'))
+#
+#     c.execute("SELECT name FROM golf_clubs")
+#     club = [row[0] for row in c.fetchall()]
+#     return render_template('clear_stats.html', clubs=clubs)
+
+# @app.route('/clear_stats', methods=['GET', 'POST'])
+# def clear_stats():
+#     conn = sqlite3.connect('clubs.db')
+#     c = conn.cursor()
+#
+#     if request.method == 'POST':
+#         club_name = request.form['club_name']
+#         c.execute("UPDATE golf_clubs SET direction = ?, distance = ?, hits = ? WHERE name = ?", (None, None, None, club_name))
+#         conn.commit()
+#         return redirect(url_for('range_time'))
+#
+#     c.execute("SELECT name FROM golf_clubs")
+#     clubs = [row[0] for row in c.fetchall()]
+#     return render_template('clear_stats.html', clubs=clubs)
+
+@app.route('/clear_stats', methods=['GET', 'POST'])
+def clear_stats():
+    conn = sqlite3.connect('clubs.db')
+    c = conn.cursor()
+
+    if request.method == 'POST':
+        club_name = request.form['club_name']
+        c.execute("UPDATE golf_clubs SET direction = 0, distance = 0, hits = 0 WHERE name = ?", (club_name,))
+        conn.commit()
+        return redirect(url_for('current_stats'))
+
+    c.execute("SELECT name FROM golf_clubs")
+    clubs = [row[0] for row in c.fetchall()]
+    return render_template('clear_stats.html', clubs=clubs)
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ app = Flask(__name__)
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect('my_database.db')
-        #g.db = sqlite3.connect('clubs.db')
+        # g.db = sqlite3.connect('clubs.db')
     return g.db
 
 
@@ -55,27 +55,6 @@ def index():
     return render_template('index.html', rows=rows)
 
 
-# # Define a route for adding a person
-# @app.route('/add_person', methods=['POST'])
-# def add_person():
-#     # Retrieve the form data
-#     name = request.form['name']
-#     age = request.form['age']
-#     print('Adding person:', name, age) # Add this line to print the data
-#
-#     # Insert the new person into the database
-#     cursor = get_cursor()
-#     cursor.execute("INSERT INTO my_table (name, age) VALUES (?, ?)", (name, age))
-#     get_db().commit()
-#
-#     # Redirect back to the index page
-#     return redirect('/')
-
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
-
-
 @app.route('/play_golf')
 def play_golf():
     return render_template('play_golf.html')
@@ -96,45 +75,6 @@ def range_time():
     selected_club = request.args.get('club_name')  # get the selected club from the URL query string
     return render_template('range_time.html', club_rows=club_rows)
 
-
-# @app.route('/submit_direction', methods=['POST'])
-# def submit_direction():
-#     if request.method == 'POST':
-#         club_id = int(request.form['club_name'])
-#         direction = int(request.form['direction'])
-#         old_direction = direction/2
-#         # hits = int(request.form['hits'])
-#         print(club_id, direction, old_direction)
-#
-#         conn = sqlite3.connect('clubs.db')
-#
-#         c = conn.cursor()
-#         # c.execute("SELECT hits FROM golf_clubs")
-#         # c.execute("SELECT hits from golf_clubs WHERE id = hits", (club_id))
-#         # row = c.fetchone()
-#         # hits = row[1]
-#
-#
-#
-#         try:
-#
-#
-#             # Increment the hits column by 1
-#             c.execute("UPDATE golf_clubs SET hits = hits + 1 WHERE id = ?", (club_id,))
-#             # Update the direction column
-#             print(direction)
-#             direction = (direction + old_direction)
-#             print(direction)
-#             c.execute("UPDATE golf_clubs SET direction = ? WHERE id = ?", (direction, club_id))
-#             conn.commit()
-#             message = "Club direction has been updated."
-#         except:
-#             conn.rollback()
-#             message = "Error updating database: {}".format(sys.exc_info()[0])
-#         finally:
-#             conn.close()
-#
-#         return redirect(url_for('range_time', club_name=club_id, msg=message))
 
 #<<<<<<<<<<THIS ONE WORKS>>>>>>>>>>>
 @app.route('/submit_direction', methods=['POST'])
@@ -177,36 +117,6 @@ def current_stats():
     conn.close()
     return render_template('current_stats.html', clubs=rows)
 
-
-# @app.route('/clear_stats', methods=['GET', 'POST'])
-# def clear_stats():
-#     conn = sqlite3.connect('clubs.db')
-#     c = conn.cursor()
-#
-#     if request.method == 'POST':
-#         club_name = request.form['club_name']
-#         c.execute("UPDATE golf_clubs SET direction = ?, distance = ?, hits = ? WHERE name = ?", (None, None, None, club_name))
-#         conn.commit()
-#         return redirect(url_for('range_time'))
-#
-#     c.execute("SELECT name FROM golf_clubs")
-#     club = [row[0] for row in c.fetchall()]
-#     return render_template('clear_stats.html', clubs=clubs)
-
-# @app.route('/clear_stats', methods=['GET', 'POST'])
-# def clear_stats():
-#     conn = sqlite3.connect('clubs.db')
-#     c = conn.cursor()
-#
-#     if request.method == 'POST':
-#         club_name = request.form['club_name']
-#         c.execute("UPDATE golf_clubs SET direction = ?, distance = ?, hits = ? WHERE name = ?", (None, None, None, club_name))
-#         conn.commit()
-#         return redirect(url_for('range_time'))
-#
-#     c.execute("SELECT name FROM golf_clubs")
-#     clubs = [row[0] for row in c.fetchall()]
-#     return render_template('clear_stats.html', clubs=clubs)
 
 @app.route('/clear_stats', methods=['GET', 'POST'])
 def clear_stats():

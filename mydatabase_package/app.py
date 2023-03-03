@@ -266,14 +266,14 @@ def submit_shot():
         c = conn.cursor()
 
         try:
-            print("the attempt?")
+            # print("the attempt?")
             # Retrieve the current direction, hits, total_distance, and average_distance values for the selected club
             c.execute("SELECT * FROM practice WHERE club = ?", (club,))
             row = c.fetchone()
 
-            print("the attemptZZ?")
-            print(type(row[0]), type(row[1]), type(row[2]), type(row[3]), type(row[4]), type(row[5]), type(row[6]),
-                  type(row[7]))
+            # print("the attemptZZ?")
+            # print(type(row[0]), type(row[1]), type(row[2]), type(row[3]), type(row[4]), type(row[5]), type(row[6]),
+            #       type(row[7]))
 
             # Print statements do not work here like this because we are redirecting to url
 
@@ -287,13 +287,13 @@ def submit_shot():
             #   total_distance: {row[5]}, average_distance: {row[7]}")
 
             if row is None:
-                print("the attempt 2")
+                # print("the attempt 2")
                 current_direction = direction
                 hits = 0
                 total_distance = 0
                 average_distance = 0
             else:
-                print("the attempt 3")
+                # print("the attempt 3")
                 current_direction = row[2]
                 hits = row[3]
                 total_distance = row[5]
@@ -302,34 +302,34 @@ def submit_shot():
                 print("the attempt 4??")
             # Calculate the new direction based on the current direction, number of hits, and new direction
             average_direction = (current_direction * hits + int(direction)) / (hits + 1)
-            print(f"New direction: {average_direction}")
-            print("capt4")
+            # print(f"New direction: {average_direction}")
+            # print("capt4")
 
             # Calculate the new total_distance and average_distance based on the current total_distance,
             # average_distance, and new_distance
             new_total_distance = total_distance + int(distance)
             average_distance = new_total_distance / (hits + 1)
-            print(f"New total distance: {new_total_distance}, new average distance: {average_distance}")
-            print("capt3")
+            # print(f"New total distance: {new_total_distance}, new average distance: {average_distance}")
+            # print("capt3")
 
             # Increment the hits column by 1 and update the direction, total_distance, and average_distance columns
             if row is None:
                 c.execute("INSERT INTO practice (club, direction, hits, total_distance, average_distance) "
                           "VALUES (?, ?, 1, ?, ?)", (club, round(average_direction), new_total_distance,
                                                      round(average_distance)))
-                print("row added to database Capt'n")
+                # print("row added to database Capt'n")
 
             else:
                 c.execute("UPDATE practice SET hits = hits + 1, direction = ?, total_distance = ?, average_distance = ?"
                           " WHERE club = ?", (round(average_direction), new_total_distance, round(average_distance),
                                               club))
-                print("row updated to database Capt'n")
+                # print("row updated to database Capt'n")
 
             conn.commit()
             message = "shot submitted successfully Capt'n"
         except:
             conn.rollback()
-            print("capt2")
+            # print("capt2")
             print("Error updating database:", sys.exc_info()[0])
             message = "Error updating database: {}".format(sys.exc_info()[0])
         finally:

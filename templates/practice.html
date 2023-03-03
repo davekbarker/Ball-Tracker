@@ -4,6 +4,27 @@
     <title>Demo Dashboard - Track My Balls</title>
     <style>
 
+    input[type=range] {
+  -webkit-appearance: none;
+  width: 200px;
+  height: 20px;
+  background-color: transparent;
+  margin: 30 0 20px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 15px;
+  cursor: pointer;
+  animate: 0.2s;
+  background-color: #ddd;
+  top: 50px;
+}
+
+
       table {
         font-family: Arial, sans-serif;
         border-collapse: collapse;
@@ -29,7 +50,7 @@
   <body>
     <h1>Demo Dashboard 2.0</h1>
     <p><b>You have <u><span id="time-left"></span></u> seconds left to practice.</b></p>
-    <p>Select your club, enter how many feet your ball goes, and the physical direction<p>
+    <p>Select your club, the physical direction, and how far it goes<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
     <p>When the timer runs out the form will reset and you will go back to the home page</p>
@@ -42,17 +63,27 @@
         <option value="{{ row[1] }}">{{ row[1] }}</option>
         {% endfor %}
       </select>
+      <br>
+      <br>
+
+      <label for="direction">Direction: </label>
+
+      <span><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100"><span><b>R</b></span>
+
+
 
       <br>
-      <br>
-      <label for="distance">Distance:</label>
+      <label for="distance">Distance: </label>
       <input type="number" name="distance" id="distance" min="0">
       <br>
-      <label for="direction">Direction:</label>
-      <input type="range" name="direction" id="direction" min="0" max="100">
+      <br>
+      <p>**please note you must include a distance with this version for it to calculate**</p>
+      <br>
       <br>
       <input type="submit" value="Submit Shot">
     </form>
+    <br>
+    <br>
 
     <form method="POST" action="{{ url_for('end_practice') }}">
       <input type="submit" value="End Practice">

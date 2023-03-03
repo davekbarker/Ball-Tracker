@@ -6,8 +6,9 @@ import time
 # from mydatabase_package import auth
 from mydatabase_package.auth import bp as auth_bp
 
-# app = Flask(__name__, template_folder='templates')
-app = Flask(__name__, template_folder='/Users/Dave/PycharmProjects/mydatabase/templates')
+app = Flask(__name__, template_folder='../templates')
+# app = Flask(__name__, template_folder='/Users/Dave/PycharmProjects/mydatabase/templates')
+# app = Flask(__name__, template_folder='/root/Ball-Tracker/templates')
 
 app.config.from_mapping(
     SECRET_KEY='dev',
@@ -75,8 +76,8 @@ def play_golf():
 @app.route('/range_time')
 def range_time():
     # Connect to clubs.db
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
-    # conn = sqlite3.connect('../clubs.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+    conn = sqlite3.connect('./clubs.db')
     c = conn.cursor()
 
     # Retrieve all club names from the golf_clubs table
@@ -95,8 +96,8 @@ def submit_direction():
     if request.method == 'POST':
         club_id = int(request.form['club_name'])
         new_direction = int(request.form['direction'])
-        conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
-        # conn = sqlite3.connect('../clubs.db')
+        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+        conn = sqlite3.connect('./clubs.db')
         c = conn.cursor()
 
         try:
@@ -123,8 +124,8 @@ def submit_direction():
 
 @app.route('/current_stats')
 def current_stats():
-    # conn = sqlite3.connect('../clubs.db')
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+    conn = sqlite3.connect('./clubs.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
     c = conn.cursor()
     c.execute("SELECT name, direction, distance, hits FROM golf_clubs")
     rows = c.fetchall()
@@ -134,8 +135,8 @@ def current_stats():
 
 @app.route('/clear_stats', methods=['GET', 'POST'])
 def clear_stats():
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
-    # conn = sqlite3.connect('../clubs.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+    conn = sqlite3.connect('./clubs.db')
     c = conn.cursor()
 
     if request.method == 'POST':
@@ -159,6 +160,7 @@ def register():
 
         # Connect to database.db
         conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
+
         c = conn.cursor()
 
         # Check if username already exists
@@ -191,7 +193,8 @@ def login():
         password = request.form['password']
 
         # Connect to database
-        conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
+        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
+        conn = sqlite3.connect('./database.db')
         c = conn.cursor()
 
         # Check if username and password are correct
@@ -223,7 +226,8 @@ def home():
 @app.route('/practice', methods=['GET', 'POST'])
 def practice():
     print("Inside print() dawg")
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    conn = sqlite3.connect('./practice.db')
     c = conn.cursor()
 
     # Fetch practice data for dropdown
@@ -262,7 +266,8 @@ def submit_shot():
         # Print statements do not work here like this because we are redirecting to url
         # print(f"club: {club}, distance: {distance}, direction: {direction}")
 
-        conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+        conn = sqlite3.connect('./practice.db')
         c = conn.cursor()
 
         try:
@@ -345,8 +350,8 @@ def submit_shot():
 
 @app.route('/end_practice', methods=['POST'])
 def end_practice():
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    # conn = sqlite3.connect('practice.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    conn = sqlite3.connect('./practice.db')
     c = conn.cursor()
     c.execute("UPDATE practice SET direction = 0, distance = 0, hits = 0, total_distance = 0, total_hits = 0, "
               "average_distance = 0")
@@ -357,7 +362,8 @@ def end_practice():
 
 @app.route('/practice_stats', methods=['GET', 'POST'])
 def practice_stats():
-    conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    conn = sqlite3.connect('./practice.db')
     c = conn.cursor()
     # c.execute("SELECT club, hits, total_distance, average_distance, direction FROM practice")
     c.execute("SELECT * FROM practice")

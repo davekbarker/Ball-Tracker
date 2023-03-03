@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo Dashboard - Track My Balls</title>
+    <style>
+
+      table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 30%;
+      }
+
+      td, th {
+        border: 1px solid black;
+        text-align: center;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+
+      th {
+        background-color: #dddddd;
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Demo Dashboard 2.0</h1>
+    <p><b>You have <u><span id="time-left"></span></u> seconds left to practice.</b></p>
+    <p>Select your club, enter how many feet your ball goes, and the physical direction<p>
+    <p>Click Submit Shot and watch the magic happen!</p>
+    <br>
+    <p>When the timer runs out the form will reset and you will go back to the home page</p>
+
+
+    <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
+      <label for="club">Club:</label>
+      <select name="club" id="club">
+        {% for row in practice_data %}
+        <option value="{{ row[1] }}">{{ row[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <br>
+      <br>
+      <label for="distance">Distance:</label>
+      <input type="number" name="distance" id="distance" min="0">
+      <br>
+      <label for="direction">Direction:</label>
+      <input type="range" name="direction" id="direction" min="0" max="100">
+      <br>
+      <input type="submit" value="Submit Shot">
+    </form>
+
+    <form method="POST" action="{{ url_for('end_practice') }}">
+      <input type="submit" value="End Practice">
+    </form>
+    <br>
+    <h2>Recent Shots:</h2>
+
+    <table id="practice-table">
+  <tr>
+    <th>ID</th>
+    <th>Club</th>
+    <th>Direction</th>
+    <th>Hits</th>
+    <th>Distance</th>
+    <th>Total Distance</th>
+    <th>Total Hits</th>
+    <th>Average Distance</th>
+  </tr>
+  {% for row in data %}
+  <tr>
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+    <td>{{ row[3] }}</td>
+    <td>{{ row[4] }}</td>
+    <td>{{ row[5] }}</td>
+    <td>{{ row[6] }}</td>
+    <td>{{ row[7] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<script>
+
+function end_practice() {
+  fetch('/end_practice', { method: 'POST' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to clear practice data');
+         }
+        window.location.href = '{{ url_for("home") }}';
+      })
+       .catch(error => {
+         console.error(error);
+          alert('Failed to clear practice data');
+       });
+    }
+  window.addEventListener('load', function() {
+    fetch('/end_practice', { method: 'POST' })
+      .then(() => refreshPracticeTable());
+});
+
+
+var timeLeft = 300; // 5 minutes in seconds
+
+function countdown() {
+  var timerElement = document.getElementById("time-left");
+  var minutes = Math.floor(timeLeft / 60);
+  var seconds = timeLeft % 60;
+  var timeString = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+  timerElement.textContent = timeString;
+  timeLeft--;
+  if (timeLeft < 0) {
+    clearInterval(countdownTimer);
+    alert("Practice has ended!");
+    window.location.href = "{{ url_for('home') }}";
+  }
+}
+countdown();
+var countdownTimer = setInterval(countdown, 1000);
+
+
+function refreshPracticeTable() {
+  fetch('/practice_stats')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      const table = document.getElementById('practice-table');
+      table.innerHTML = ''; // clear the table rows before inserting new data
+      const headerRow = table.insertRow(0);
+      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Total Distance</th><th>Average Distance</th>';
+
+      data.forEach(rowData => {
+        const id = rowData[0];
+        const club = rowData[1];
+        const direction = rowData[2];
+        const hits = rowData[3];
+        const distance = rowData[4];
+        const total_distance = rowData[5];
+        const total_hits = rowData[6];
+        const average_distance = rowData[7];
+        const row = table.insertRow(-1);
+        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}"><td>${hits}</td><td>${total_distance}</td><td>${average_distance}</td>`;
+      });
+    });
+
+}
+
+
+// Call the refreshPracticeTable() function when the page loads
+document.addEventListener('DOMContentLoaded', refreshPracticeTable);
+
+// Call the refreshPracticeTable() function after submitting a shot
+const form = document.getElementById('shot-form');
+form.addEventListener('submit', event => {
+  event.preventDefault(); // prevent form submission
+  const formData = new FormData(event.target);
+  fetch('/submit_shot', { method: 'POST', body: formData })
+    .then(() => refreshPracticeTable());
+});
+
+</script>
+
+  </body>
+</html>

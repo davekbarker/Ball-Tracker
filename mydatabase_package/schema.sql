@@ -1,0 +1,5 @@
+CREATE TABLE my_table (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER NOT NULL
+);

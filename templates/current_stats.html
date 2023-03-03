@@ -52,10 +52,15 @@
     </form>
     <br>
     <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Range Time</button>
-    <br><br><br>
+    <br><br>
+        <form method="GET" action="/index">
+      <input type="submit" value="Back to Dashboard">
+    </form><br><br><br><br>
     <form action="{{ url_for('clear_stats') }}" method="get">
         <button type="submit">Clear Stats</button>
     </form>
-
+<br>
+<h4>The direction is the calculated to be the average direction per club hits</h4>
+<h4>All of these values are pulled and saved in a database, no values are hard coded</h4>
 </body>
 </html>

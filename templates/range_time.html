@@ -16,7 +16,7 @@
             {% endfor %}
         </select>
         <br><br>
-        <label for="club-direction-range">Average Direction:</label>
+        <label for="club-direction-range">Ball's Direction:</label>
         <br><br>
         <input type="range" id="club-direction-range" min="0" max="100" value="50" name="direction">
         <br><br>
@@ -25,9 +25,16 @@
     </form>
     	  <button class="my-button" onclick="location.href='{{ url_for('current_stats') }}'">Current Stats</button>
     <br><br><br>
+    <form method="GET" action="/index">
+      <input type="submit" value="Back to Dashboard">
+    </form>
+    <br><br>
     <form action="/" method="GET">
         <button type="submit">Back to Home</button>
     </form>
+
+<h4>Select your club, select the direction of your ball, click Submit Direction</h4>
+<h4>      The data is stored on the Current Stats page for easy access </h4>
 
 </body>
 </html>

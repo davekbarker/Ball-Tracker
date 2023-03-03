@@ -5,12 +5,14 @@
   </head>
   <body>
 
-      <h1>Track My Balls</h1>
+      <h1>Track My Balls Dashboard</h1>
 	  <button class="my-button" onclick="location.href='{{ url_for('play_golf') }}'">Play Golf</button>
       <br>
       <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Range Time</button>
       <br>
 	  <button class="my-button" onclick="location.href='{{ url_for('current_stats') }}'">Current Stats</button>
+      <br><br><br>
+    <a href="{{ url_for('home') }}"><button>TEMP Go to Home</button></a>
 
   </body>
 </html>

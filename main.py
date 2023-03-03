@@ -1,5 +1,4 @@
-import sqlite3
-from app import app
+from mydatabase_package.app import app
 
 
 if __name__ == '__main__':

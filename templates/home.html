@@ -1,0 +1,92 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--  <head>-->
+<!--    <title>Track My Balls</title>-->
+<!--  </head>-->
+<!--  <body>-->
+<!--    <h1>Welcome to Track My Balls</h1>-->
+<!--    <form method="POST" action="{{ url_for('login') }}">-->
+<!--      <h2>Login</h2>-->
+<!--      <label for="login-username">Username:</label>-->
+<!--      <input type="text" name="username" id="login-username">-->
+<!--      <br>-->
+<!--      <label for="login-password">Password:</label>-->
+<!--      <input type="password" name="password" id="login-password">-->
+<!--      <br>-->
+<!--      <input type="submit" value="Login">-->
+<!--    </form>-->
+<!--    <form method="POST" action="{{ url_for('register') }}">-->
+<!--      <h2>Register</h2>-->
+<!--      <label for="register-username">Username:</label>-->
+<!--      <input type="text" name="username" id="register-username">-->
+<!--      <br>-->
+<!--      <label for="register-email">Email:</label>-->
+<!--      <input type="email" name="email" id="register-email">-->
+<!--      <br>-->
+<!--      <label for="register-password">Password:</label>-->
+<!--      <input type="password" name="password" id="register-password">-->
+<!--      <br>-->
+<!--      <input type="submit" value="Register">-->
+<!--    </form>-->
+<!--    <form method="POST" action="{{ url_for('practice') }}">-->
+<!--      <h2>Practice</h2>-->
+<!--      <input type="submit" value="Practice">-->
+<!--    </form>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <form method="GET" action="/index">-->
+<!--      <input type="submit" value="Go to Index Page">-->
+<!--    </form>-->
+<!--  </body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Track My Balls</title>
+  </head>
+  <body>
+    <h1>Welcome to Track My Balls</h1>
+
+    <form method="POST" action="{{ url_for('range_time') }}">
+      <h2>Login</h2>
+      <label for="login-username">Username:</label>
+      <input type="text" name="username" id="login-username">
+      <br>
+      <label for="login-password">Password:</label>
+      <input type="password" name="password" id="login-password">
+      <br>
+<!--      <input type="submit" value="Login">-->
+<!--      <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Login2</button>-->
+    </form>
+    <form method="GET" action="/index">
+      <input type="submit" value="Login">
+    </form>
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <h2>Register</h2>
+      <label for="register-username">Username:</label>
+      <input type="text" name="username" id="register-username">
+<!--      <br>-->
+<!--      <label for="register-email">Email:</label>-->
+<!--      <input type="email" name="email" id="register-email">-->
+<!--      <br>-->
+<!--      <label for="register-password">Password:</label>-->
+<!--      <input type="password" name="password" id="register-password">-->
+<!--      <br>-->
+<!--      <input type="submit" value="Register">-->
+<!--      <button class="my-button" onclick="location.href='{{ url_for('register') }}'">Register 2</button>-->
+<!--    </form>-->
+        </form>
+    <form method="GET" action="/register">
+      <input type="submit" value="Register">
+    </form>
+    <br>
+    <br>
+    <button class="my-button" onclick="location.href='{{ url_for('practice') }}'">Demo Dashboard 2.0</button>
+    <br><br><br>
+    <form method="GET" action="/index">
+      <input type="submit" value="Demo Dashboard 1.0">
+    </form>
+    <br>
+  </body>
+</html>

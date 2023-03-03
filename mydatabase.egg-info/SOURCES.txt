@@ -1,0 +1,11 @@
+setup.py
+mydatabase.egg-info/PKG-INFO
+mydatabase.egg-info/SOURCES.txt
+mydatabase.egg-info/dependency_links.txt
+mydatabase.egg-info/requires.txt
+mydatabase.egg-info/top_level.txt
+mydatabase_package/__init__.py
+mydatabase_package/__main__.py
+mydatabase_package/app.py
+mydatabase_package/auth.py
+mydatabase_package/database.py

@@ -2,17 +2,34 @@
 <html>
   <head>
     <title>Track My Balls</title>
+      <style>
+      .button-demo {
+        background-color: black;
+        border-radius: 25px;
+        color: white;
+        padding: 20px 40px;
+        margin: 0 10px;
+        width: 30%;
+        font-size: 40px;
+      }
+
+      .button-demo:hover {
+        background-color: white;
+        color: black;
+      }
+      </style>
   </head>
   <body>
 
-      <h1>Track My Balls Dashboard</h1>
+      <h1>Track My Balls Dashboard 1.0</h1>
+
 	  <button class="my-button" onclick="location.href='{{ url_for('play_golf') }}'">Play Golf</button>
       <br>
       <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Range Time</button>
       <br>
 	  <button class="my-button" onclick="location.href='{{ url_for('current_stats') }}'">Current Stats</button>
       <br><br><br>
-    <a href="{{ url_for('home') }}"><button>TEMP Go to Home</button></a>
+      <button class="button-demo" onclick="location.href='{{ url_for('home') }}'">Back to Home</button>
 
   </body>
 </html>

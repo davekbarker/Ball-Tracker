@@ -4,92 +4,275 @@
     <title>Demo Dashboard - Track My Balls</title>
     <style>
 
-    input[type=range] {
-  -webkit-appearance: none;
-  width: 200px;
-  height: 20px;
-  background-color: transparent;
-  margin: 30 0 20px 0;
-}
-input[type=range]:focus {
-  outline: none;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 15px;
-  cursor: pointer;
-  animate: 0.2s;
-  background-color: #ddd;
-  top: 50px;
-}
-
-
-      table {
+    .input-table {
         font-family: Arial, sans-serif;
         border-collapse: collapse;
-        width: 30%;
-      }
+<!--        max-width: 100px;-->
+        margin-bottom: 20px; /* add margin to separate from the previous element */
+    }
 
-      td, th {
+    .input-table td, .input-table th {
         border: 1px solid black;
         text-align: center;
         padding: 8px;
-      }
+        vertical-align: middle;
+    }
 
-      tr:nth-child(even) {
+    .input-table tr:nth-child(even) {
         background-color: #dddddd;
-      }
+    }
 
-      th {
+    .input-table th {
         background-color: #dddddd;
         color: black;
-      }
+    }
+
+    #input-table td:first-child label{
+        display: block;
+        padding-left: 22%;
+<!--  border: 1px solid black;-->
+<!--  text-align: center;-->
+<!--  padding: 8px;-->
+        font-size: 35px !important;
+        font-weight: bold !important;
+}
+
+    #input-table td:last-child label {
+        padding-left: 11%;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    #input-table td:first-child label[for="club"] {
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    #input-table {
+        width: 44%;
+    }
+
+
+
+
+    .directionIN {
+        -webkit-appearance: none;
+        width: 33%;
+        height: 20px;
+        background-color: transparent;
+        margin: 30 0 20px 0;
+    }
+
+    input[type=range]:focus {
+        outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background-color: #fff;
+        border: 2px solid #000;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #practice-table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 36%;
+    }
+
+    #practice-table td, #practice-table th {
+        border: 1px solid black;
+        text-align: center;
+        padding: 8px;
+    }
+
+<!--    #practice-table tr:nth-child(even) {-->
+<!--        background-color: #dddddd;-->
+<!--    }-->
+
+    #practice-table th {
+        background-color: #dddddd;
+        color: black;
+    }
+
+    .directionOUT::-webkit-slider-runnable-track {
+        background-color: transparent;
+    }
+
+    h1 {
+<!--      text-align: center;-->
+        font-size: 3rem;
+        margin-top: 2rem;
+        padding-left: 13%;
+    }
+    #h1-title {
+<!--      text-align: center;-->
+        font-size: 3rem;
+        margin-top: 2rem;
+        padding-left: 11%;
+    }
+
+    h2 {
+<!--      text-align: center;-->
+        font-size: 2rem;
+        margin-top: 2rem;
+        padding-left: 8%;
+    }
+
+    select, input[type="submit"] {
+        width: 36%;
+        text-align: center;
+        height: 90px;
+        font-size: 2.5rem;
+        padding: 5px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        border: 1px solid black;
+        margin: 0 auto;
+    }
+
+    #input-table select#club {
+        width: 95%;
+    }
+
+    #input-table select,
+    #input-table input[type="number"] {
+        width: 65%;
+        text-align: center;
+        height: 50px;
+        font-size: 1.2rem;
+        padding: 5px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid black;
+        margin: 0 auto;
+    }
+
+    #practice-table.directionOUT {
+        width: 100%;
+    }
+
+    .directionOUT {
+        height: 0px;
+        background-color: lightgray;
+<!--        position: relative;-->
+        border-radius: 5px;
+        margin: 0 auto;
+        width: 99%;
+    }
+
+    .directionOUT::-webkit-slider-runnable-track {
+        background-color: white; /* or any other color of your choice */
+        padding-top: 7%;
+        width: 100%;
+    }
+
+
+.directionOUT::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  background-color: green !important;
+  border: 2px solid #000 !important;
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+}
+
+
+.directionOUT::-webkit-slider-thumb::after {
+    content: attr(value);
+    font-size: 20px;
+
+}
+
+
+
+
+
+    input[type="submit"] {
+        background-color: black;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: white;
+        color: black;
+    }
+
+    label[for="direction"] {
+        display: inline-block;
+        margin-top: 20px;
+        margin-right: 10px;
+        font-size: 35px;
+        font-weight: bold;
+        padding-left: 13%;
+    }
+
+    .directionIN span b {
+        font-size: 50px;
+    }
+
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    span.vertical-line {
+        position: absolute;
+        top: 32.5%;
+        left: 18.2%;
+        transform: translate(-50%, -50%);
+        font-size: 35px;
+        z-index: 1;
+    }
+
     </style>
   </head>
   <body>
-    <h1>Demo Dashboard 2.0</h1>
-    <p><b>You have <u><span id="time-left"></span></u> seconds left to practice.</b></p>
-    <p>Select your club, the physical direction, and how far it goes<p>
-    <p>Click Submit Shot and watch the magic happen!</p>
+<!--  <div class="center">-->
+    <h1 id="h1-title">Demo Dashboard 2.0</h1>
+    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice.</b></h2>
     <br>
-    <p>When the timer runs out the form will reset and you will go back to the home page</p>
-
-
     <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
-      <label for="club">Club:</label>
-      <select name="club" id="club">
-        {% for row in practice_data %}
-        <option value="{{ row[1] }}">{{ row[1] }}</option>
-        {% endfor %}
-      </select>
-      <br>
-      <br>
+        <table id="input-table">
+            <tr>
+                <td><label for="club">Select Club:</label></td>
+                <td><label for="distance">Ball Distance:</label></td>
+            </tr>
+            <tr>
+                <td><select name="club" id="club">
+                    {% for row in practice_data %}
+                        <option value="{{ row[1] }}">{{ row[1] }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><input type="number" name="distance" id="distance" min="0"></td>
+            </tr>
+        </table>
 
-      <label for="direction">Direction: </label>
+        <label for="direction">Direction: </label>
+        <br><br><br>
+<!--        <span style="font-size: 35px;"><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span style="font-size: 35px;"><b>R</b></span><span style="position: absolute; top: -10px; left: 50%;">|</span>-->
+        <div style="position: relative; display: inline-block; width: 55%;">
+            <span style="font-size: 35px;"><b>L</b></span>
+            <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN" style="width: 60%;">
+            <span style="position: absolute; left: 33%; top: 50%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
+            <span style="font-size: 35px;"><b>R</b></span>
+        </div>
 
-      <span><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100"><span><b>R</b></span>
-
-
-
-      <br>
-      <label for="distance">Distance: </label>
-      <input type="number" name="distance" id="distance" min="0">
-      <br>
-      <br>
-      <p>**please note you must include a distance with this version for it to calculate**</p>
-      <br>
-      <br>
-      <input type="submit" value="Submit Shot">
+<!--        <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span class="vertical-line">|</span><span style="font-size: 35px;"><b>R</b></span>-->
+        <br><br><br><br><br>
+        <input type="submit" value="Submit Shot">
     </form>
-    <br>
-    <br>
 
-    <form method="POST" action="{{ url_for('end_practice') }}">
-      <input type="submit" value="End Practice">
-    </form>
-    <br>
-    <h2>Recent Shots:</h2>
+    <h1>Recent Shots:</h1>
 
     <table id="practice-table">
   <tr>
@@ -115,7 +298,12 @@ input[type=range]::-webkit-slider-runnable-track {
   </tr>
   {% endfor %}
 </table>
+<br>
+<br>
 
+    <form method="POST" action="{{ url_for('end_practice') }}">
+      <input type="submit" value="End Practice">
+    </form>
 <script>
 
 function end_practice() {
@@ -136,7 +324,6 @@ function end_practice() {
       .then(() => refreshPracticeTable());
 });
 
-
 var timeLeft = 300; // 5 minutes in seconds
 
 function countdown() {
@@ -155,7 +342,6 @@ function countdown() {
 countdown();
 var countdownTimer = setInterval(countdown, 1000);
 
-
 function refreshPracticeTable() {
   fetch('/practice_stats')
     .then(response => response.json())
@@ -164,7 +350,7 @@ function refreshPracticeTable() {
       const table = document.getElementById('practice-table');
       table.innerHTML = ''; // clear the table rows before inserting new data
       const headerRow = table.insertRow(0);
-      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Total Distance</th><th>Average Distance</th>';
+      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Average Distance</th><th>Total Distance</th>';
 
       data.forEach(rowData => {
         const id = rowData[0];
@@ -176,12 +362,10 @@ function refreshPracticeTable() {
         const total_hits = rowData[6];
         const average_distance = rowData[7];
         const row = table.insertRow(-1);
-        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}"><td>${hits}</td><td>${total_distance}</td><td>${average_distance}</td>`;
+        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="directionOUT"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
       });
     });
-
 }
-
 
 // Call the refreshPracticeTable() function when the page loads
 document.addEventListener('DOMContentLoaded', refreshPracticeTable);
@@ -190,12 +374,35 @@ document.addEventListener('DOMContentLoaded', refreshPracticeTable);
 const form = document.getElementById('shot-form');
 form.addEventListener('submit', event => {
   event.preventDefault(); // prevent form submission
+
+  const distanceInput = document.getElementById('distance');
+  const distanceValue = distanceInput.value;
+
+  if (distanceValue === '' || distanceValue === '0') {
+    alert("It doesn't count if your ball stays in the tee box!");
+    return;
+  }
+
   const formData = new FormData(event.target);
+
   fetch('/submit_shot', { method: 'POST', body: formData })
-    .then(() => refreshPracticeTable());
+    .then(() => {
+<!--      distanceInput.value = ''; // clear the distance input after submission-->
+      refreshPracticeTable();
+    });
 });
 
 </script>
-
+<!--        </div>-->
+<h3 style ="text-align: center; padding-right: 65%;">    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+    <p>Click Submit Shot and watch the magic happen!</p>
+    <br>
+    <p>When the timer runs out the form will reset</p>
+        <br>
+      <p><u>**please note you must include a distance with this version for it to calculate**</u></p></h3>
   </body>
+  <br><br><br><br><br>
+    <div style="text-align: center;">
+      © 2023 David Barker. All rights reserved.
+    </div>
 </html>

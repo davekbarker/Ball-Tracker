@@ -43,29 +43,85 @@
 <html>
   <head>
     <title>Track My Balls</title>
+    <style>
+
+      .log/reg-butts {
+        display: flex;
+        justify-content: center;
+      }
+      .log/reg-demo {
+        background-color: black;
+        border-radius: 25px;
+        color: white;
+        padding: 20px 40px;
+        margin: 0 10px;
+        width: 30%;
+        font-size: 40px;
+      }
+
+      .demo-butts {
+        display: flex;
+        justify-content: center;
+      }
+
+      .button-demo {
+        background-color: black;
+        border-radius: 25px;
+        color: white;
+        padding: 20px 40px;
+        margin: 0 10px;
+        width: 30%;
+        font-size: 40px;
+      }
+
+      .button-demo:hover {
+        background-color: white;
+        color: black;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 4rem;
+        margin-top: 2rem;
+      }
+    </style>
   </head>
   <body>
     <h1>Welcome to Track My Balls</h1>
+    <br>
+<!--    <img src="home_main.jpg" alt="Home Page Hitter">-->
+<!--    <img src="./home_main.jpg" alt="Home Page Hitter">-->
+    <div style="text-align: center;">
+    <img src="https://freesvg.org/img/1538176837.png" alt="Home Page Hitter">
+    </div>
+    <br><br><br>
+<!--        <form method="GET" action="/index">-->
+<!--      <input type="submit" value="Demo Dashboard 1.0">-->
+<!--    </form>-->
+    <div class="demo-butts">
+      <button class="button-demo" onclick="location.href='{{ url_for('index') }}'">Demo Dashboard 1.0</button>
+      <button class="button-demo" onclick="location.href='{{ url_for('practice') }}'">Demo Dashboard 2.0</button>
+    </div>
+    <br>
+    <div class="demo-butts">
+      <button class="button-demo" onclick="location.href='{{ url_for('login') }}'">Login</button>
+      <button class="button-demo" onclick="location.href='{{ url_for('register') }}'">Register</button>
+    </div>
+  <br>
+    <div class="demo-butts">
+      <button class="button-demo" onclick="location.href='{{ url_for('changelog') }}'">Updates</button>
+    </div>
+  <br>
+  <br>
+    <div style="text-align: center;">
+      Please use Chrome or Firefox for best user experience
+    </div>
 
-    <form method="POST" action="{{ url_for('range_time') }}">
-      <h2>Login</h2>
-      <label for="login-username">Username:</label>
-      <input type="text" name="username" id="login-username">
-      <br>
-      <label for="login-password">Password:</label>
-      <input type="password" name="password" id="login-password">
-      <br>
-<!--      <input type="submit" value="Login">-->
-<!--      <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Login2</button>-->
-    </form>
-    <form method="GET" action="/index">
-      <input type="submit" value="Login">
-    </form>
-
-    <form method="POST" action="{{ url_for('register') }}">
-      <h2>Register</h2>
-      <label for="register-username">Username:</label>
-      <input type="text" name="username" id="register-username">
+  <br>
+<!--      <form method="POST" action="{{ url_for('register') }}">-->
+<!--      <h2>Register</h2>-->
+<!--      <label for="register-username">Username:</label>-->
+<!--      <input type="text" name="username" id="register-username">-->
 <!--      <br>-->
 <!--      <label for="register-email">Email:</label>-->
 <!--      <input type="email" name="email" id="register-email">-->
@@ -76,17 +132,35 @@
 <!--      <input type="submit" value="Register">-->
 <!--      <button class="my-button" onclick="location.href='{{ url_for('register') }}'">Register 2</button>-->
 <!--    </form>-->
-        </form>
-    <form method="GET" action="/register">
-      <input type="submit" value="Register">
-    </form>
-    <br>
-    <br>
-    <button class="my-button" onclick="location.href='{{ url_for('practice') }}'">Demo Dashboard 2.0</button>
-    <br><br><br>
-    <form method="GET" action="/index">
-      <input type="submit" value="Demo Dashboard 1.0">
-    </form>
-    <br>
+<!--        </form>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--        <form method="GET" action="/index">-->
+<!--      <input type="submit" value="Login">-->
+<!--    </form>-->
+
+<!--    <br>-->
+<!--  <br>-->
+<!--  <br>-->
+<!--  <br>-->
+<!--      <form method="POST" action="{{ url_for('range_time') }}">-->
+<!--      <h2>Login</h2>-->
+<!--      <label for="login-username">Username:</label>-->
+<!--      <input type="text" name="username" id="login-username">-->
+<!--      <br>-->
+<!--      <label for="login-password">Password:</label>-->
+<!--      <input type="password" name="password" id="login-password">-->
+<!--      <br>-->
+<!--      <input type="submit" value="Login">-->
+<!--      <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Login2</button>-->
+<!--    </form>-->
+<!--    <form method="GET" action="/register">-->
+<!--      <input type="submit" value="Register">-->
+<!--    </form>-->
+<!--  <br><br>-->
+
+    <div style="text-align: center;">
+      © 2023 David Barker. All rights reserved.
+    </div>
   </body>
 </html>

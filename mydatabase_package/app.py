@@ -223,6 +223,11 @@ def home():
     return render_template('home.html')
 
 
+@app.route('/changelog')
+def changelog():
+    return render_template('changelog.html')
+
+
 @app.route('/practice', methods=['GET', 'POST'])
 def practice():
     print("Inside print() dawg")
@@ -261,6 +266,7 @@ def submit_shot():
     try:
         club = request.form['club']
         distance = request.form['distance']
+
         direction = request.form['direction']
 
         # Print statements do not work here like this because we are redirecting to url

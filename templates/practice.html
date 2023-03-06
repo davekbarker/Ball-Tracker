@@ -51,7 +51,7 @@
     }
 
     #input-table {
-        width: 44%;
+        width: 100%;
     }
 
 
@@ -59,10 +59,10 @@
 
     .directionIN {
         -webkit-appearance: none;
-        width: 33%;
-        height: 20px;
+        width: 90% !important;
+        height: 10px !important;
         background-color: transparent;
-        margin: 30 0 20px 0;
+        margin: 10 0 10px 0 !important;
     }
 
     input[type=range]:focus {
@@ -82,7 +82,7 @@
     #practice-table {
         font-family: Arial, sans-serif;
         border-collapse: collapse;
-        width: 36%;
+        width: 90%;
     }
 
     #practice-table td, #practice-table th {
@@ -108,24 +108,24 @@
 <!--      text-align: center;-->
         font-size: 3rem;
         margin-top: 2rem;
-        padding-left: 13%;
+        padding-left: 38%;
     }
     #h1-title {
 <!--      text-align: center;-->
         font-size: 3rem;
         margin-top: 2rem;
-        padding-left: 11%;
+        padding-left: 31%;
     }
 
     h2 {
 <!--      text-align: center;-->
         font-size: 2rem;
         margin-top: 2rem;
-        padding-left: 8%;
+        padding-left: 27%;
     }
 
     select, input[type="submit"] {
-        width: 36%;
+        width: 90%;
         text-align: center;
         height: 90px;
         font-size: 2.5rem;
@@ -142,7 +142,7 @@
 
     #input-table select,
     #input-table input[type="number"] {
-        width: 65%;
+        width: 80%;
         text-align: center;
         height: 50px;
         font-size: 1.2rem;
@@ -175,10 +175,10 @@
 
 .directionOUT::-webkit-slider-thumb {
   -webkit-appearance: none !important;
-  background-color: green !important;
+<!--  background-color: green !important;-->
   border: 2px solid #000 !important;
-  width: 120px !important;
-  height: 120px !important;
+  width: 15px !important;
+  height: 15px !important;
   border-radius: 50% !important;
   cursor: pointer !important;
 }
@@ -212,11 +212,11 @@
         margin-right: 10px;
         font-size: 35px;
         font-weight: bold;
-        padding-left: 13%;
+        padding-left: 40%;
     }
 
     .directionIN span b {
-        font-size: 50px;
+        font-size: 35px;
     }
 
     .center {
@@ -225,27 +225,27 @@
         align-items: center;
     }
 
-    span.vertical-line {
-        position: absolute;
-        top: 32.5%;
-        left: 18.2%;
-        transform: translate(-50%, -50%);
-        font-size: 35px;
-        z-index: 1;
-    }
+<!--    span.vertical-line {-->
+<!--        position: absolute;-->
+<!--        top: 32.5%;-->
+<!--        left: 15%;-->
+<!--        transform: translate(-50%, -50%);-->
+<!--        font-size: 35px;-->
+<!--        z-index: 1;-->
+<!--    }-->
 
     </style>
   </head>
   <body>
 <!--  <div class="center">-->
     <h1 id="h1-title">Demo Dashboard 2.0</h1>
-    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice.</b></h2>
+    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>
     <br>
     <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
         <table id="input-table">
             <tr>
-                <td><label for="club">Select Club:</label></td>
-                <td><label for="distance">Ball Distance:</label></td>
+                <td><label for="club"><u>Select Club</u></label></td>
+                <td><label for="distance" style="padding-left: 20%;"><u>Ball Distance</u></label></td>
             </tr>
             <tr>
                 <td><select name="club" id="club">
@@ -257,13 +257,13 @@
             </tr>
         </table>
 
-        <label for="direction">Direction: </label>
+        <label for="direction"><u>Direction</u></label>
         <br><br><br>
 <!--        <span style="font-size: 35px;"><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span style="font-size: 35px;"><b>R</b></span><span style="position: absolute; top: -10px; left: 50%;">|</span>-->
-        <div style="position: relative; display: inline-block; width: 55%;">
+        <div style="position: relative; display: inline-block; width: 95%;">
             <span style="font-size: 35px;"><b>L</b></span>
             <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN" style="width: 60%;">
-            <span style="position: absolute; left: 33%; top: 50%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
+            <span style="position: absolute; left: 47.6%; top: 60%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
             <span style="font-size: 35px;"><b>R</b></span>
         </div>
 
@@ -272,7 +272,7 @@
         <input type="submit" value="Submit Shot">
     </form>
 
-    <h1>Recent Shots:</h1>
+    <h1><u>Recent Shots</u></h1>
 
     <table id="practice-table">
   <tr>
@@ -394,7 +394,7 @@ form.addEventListener('submit', event => {
 
 </script>
 <!--        </div>-->
-<h3 style ="text-align: center; padding-right: 65%;">    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+<h3 style ="text-align: center">    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
     <p>When the timer runs out the form will reset</p>

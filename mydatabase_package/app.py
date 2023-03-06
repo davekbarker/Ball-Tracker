@@ -1,3 +1,4 @@
+import os
 import sys
 import sqlite3
 from flask import Flask, render_template, g, request, redirect, url_for, session, jsonify
@@ -60,7 +61,7 @@ def teardown_cursor(exception):
 
 @app.route("/index")
 def index():
-    connection = sqlite3.connect("mydatabase.db")
+    connection = sqlite3.connect("./mydatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM my_table")
     rows = cursor.fetchall()
@@ -228,35 +229,79 @@ def changelog():
     return render_template('changelog.html')
 
 
+def get_database_filename(ip_address):
+    return f'practice.{ip_address}.db'
+
+
+def create_new_database(ip_address):
+    conn = sqlite3.connect(get_database_filename(ip_address))
+    c = conn.cursor()
+
+    # Create the table
+    c.execute('''CREATE TABLE practice
+             (id INTEGER NOT NULL,
+             club TEXT PRIMARY KEY,
+             direction INTEGER NOT NULL DEFAULT 0,
+             hits INTEGER NOT NULL DEFAULT 0,
+             distance INTEGER NOT NULL DEFAULT 0,
+             total_distance INTEGER NOT NULL DEFAULT 0,
+             total_hits INTEGER NOT NULL DEFAULT 0,
+             average_distance INTEGER NOT NULL DEFAULT 0,
+             ip TEXT,
+             last_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+
+    clubs = ['Driver', 'Fairway Wood', 'Hybrid', 'Iron', 'Wedge']
+    for i, club in enumerate(clubs):
+        c.execute("INSERT INTO practice (id, club, direction, hits, distance, total_distance, total_hits, "
+                  "average_distance, ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  (i + 1, club, 0, 0, 0, 0, 0, 0, ip_address))
+
+    # Save (commit) the changes
+    conn.commit()
+
+    # Close the connection
+    conn.close()
+
+
 @app.route('/practice', methods=['GET', 'POST'])
 def practice():
-    print("Inside print() dawg")
+    # Get the IP address of the user
+    ip_address = request.remote_addr
+    print("Inside practice() dawg")
+    print(f"ip address: {ip_address}")
+
+    # Check if a database for this IP address exists
+    if not os.path.exists(get_database_filename(ip_address)):
+        create_new_database(ip_address)
+
     # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    conn = sqlite3.connect('./practice.db')
+    # conn = sqlite3.connect('./practice.db')
+    conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
 
     # Fetch practice data for dropdown
     # c.execute("SELECT DISTINCT club FROM practice")
     c.execute("SELECT * FROM practice")
     practice_data = c.fetchall()
-    print("Inside print() dawg 2")
+    print("Inside practice() dawg 2")
     print(practice_data)
     if request.method == 'POST':
         club = request.form['club']
         direction = request.form['direction']
         distance = request.form['distance']
-        print("Inside print() dawg 3")
+        print("Inside practice() dawg 3")
+        print(practice_data)
         c.execute("UPDATE practice SET direction = direction + ?, hits = hits + 1, distance = distance + ?,"
                   " total_distance = total_distance + ?, average_distance = total_distance / hits WHERE club = ?",
                   (int(direction), int(distance), int(distance), club))
-        print("Inside print() dawg 4")
+        print("Inside practice() dawg 4")
         conn.commit()
-    print("Inside print() dawg 5")
+    print("Inside practice() dawg 5")
     c.execute("SELECT * FROM practice")
-    print("Inside print() dawg 6")
+    print("Inside practice() dawg 6")
     data = c.fetchall()
     conn.close()
-    print("Inside print() dawg 7")
+    print("Inside practice() dawg 7")
     return render_template('practice.html', data=data, practice_data=practice_data)
 
 
@@ -266,7 +311,6 @@ def submit_shot():
     try:
         club = request.form['club']
         distance = request.form['distance']
-
         direction = request.form['direction']
 
         # Print statements do not work here like this because we are redirecting to url

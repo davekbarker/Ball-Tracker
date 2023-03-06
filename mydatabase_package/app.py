@@ -313,12 +313,25 @@ def submit_shot():
         distance = request.form['distance']
         direction = request.form['direction']
 
+        # Get the IP address of the user
+        ip_address = request.remote_addr
+        print("Inside submit_shot() dawg")
+        print(f"ip address: {ip_address}")
+
+        # Check if a database for this IP address exists
+        if not os.path.exists(get_database_filename(ip_address)):
+            create_new_database(ip_address)
+
+        # Connect to the database
+        conn = sqlite3.connect(get_database_filename(ip_address))
+        c = conn.cursor()
+
         # Print statements do not work here like this because we are redirecting to url
         # print(f"club: {club}, distance: {distance}, direction: {direction}")
 
         # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-        conn = sqlite3.connect('./practice.db')
-        c = conn.cursor()
+        # conn = sqlite3.connect('./practice.db')
+        # c = conn.cursor()
 
         try:
             # print("the attempt?")
@@ -400,9 +413,23 @@ def submit_shot():
 
 @app.route('/end_practice', methods=['POST'])
 def end_practice():
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    conn = sqlite3.connect('./practice.db')
+
+    # Get the IP address of the user
+    ip_address = request.remote_addr
+    print("Inside end_practice() dawg")
+    print(f"ip address: {ip_address}")
+
+    # Check if a database for this IP address exists
+    if not os.path.exists(get_database_filename(ip_address)):
+        create_new_database(ip_address)
+
+    # Connect to the database
+    conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
+
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    #conn = sqlite3.connect('./practice.db')
+    #c = conn.cursor()
     c.execute("UPDATE practice SET direction = 0, distance = 0, hits = 0, total_distance = 0, total_hits = 0, "
               "average_distance = 0")
     conn.commit()
@@ -412,9 +439,23 @@ def end_practice():
 
 @app.route('/practice_stats', methods=['GET', 'POST'])
 def practice_stats():
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    conn = sqlite3.connect('./practice.db')
+
+    # Get the IP address of the user
+    ip_address = request.remote_addr
+    print("Inside practice_stats() dawg")
+    print(f"ip address: {ip_address}")
+
+    # Check if a database for this IP address exists
+    if not os.path.exists(get_database_filename(ip_address)):
+        create_new_database(ip_address)
+
+    # Connect to the database
+    conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
+
+    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
+    # conn = sqlite3.connect('./practice.db')
+    # c = conn.cursor()
     # c.execute("SELECT club, hits, total_distance, average_distance, direction FROM practice")
     c.execute("SELECT * FROM practice")
     print("capt practice_stats")

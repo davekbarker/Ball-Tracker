@@ -1,11 +1,13 @@
+import bcrypt
 import os
 import sys
 import sqlite3
 from flask import Flask, render_template, g, request, redirect, url_for, session, jsonify
-import time
+# from flask_login import LoginManager
 
+# DATABASES_DIR = "/Users/Dave/PycharmProjects/mydatabase/databases/"
 # from mydatabase_package import auth
-from mydatabase_package.auth import bp as auth_bp
+#from mydatabase_package.auth import bp as auth_bp
 
 app = Flask(__name__, template_folder='../templates')
 # app = Flask(__name__, template_folder='/Users/Dave/PycharmProjects/mydatabase/templates')
@@ -18,7 +20,7 @@ app.config.from_mapping(
 )
 
 # app.register_blueprint(auth)
-app.register_blueprint(auth_bp)
+#app.register_blueprint(auth_bp)
 
 
 # Create a connection to the database
@@ -61,6 +63,8 @@ def teardown_cursor(exception):
 
 @app.route("/index")
 def index():
+    # 2 '..' for droplet
+    # connection = sqlite3.connect("../mydatabase.db")
     connection = sqlite3.connect("./mydatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM my_table")
@@ -72,6 +76,11 @@ def index():
 @app.route('/play_golf')
 def play_golf():
     return render_template('play_golf.html')
+
+
+@app.route('/wrongUser')
+def wrongUser():
+    return render_template('wrongUser.html')
 
 
 @app.route('/range_time')
@@ -153,34 +162,68 @@ def clear_stats():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    print("In register()")
+    print(os.getcwd())
+    # Get the IP address of the user
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    # ip_address = request.remote_addr
+    print(f"ip address: {ip_address}")
+
     if request.method == 'POST':
         # Get form values
+        name = request.form['name']
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form['confirmPassword']
+        print(name, username, email, password, ip_address, confirm_password)
 
-        # Connect to database.db
-        conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        print(hashed_password)
+        print(name, username, email, hashed_password, ip_address)
 
-        c = conn.cursor()
+        # # Connect to database.db
+        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
+        # c = conn.cursor()
+        print(f"{username}.db")
+        # db_file = os.path.join('/Users/Dave/PycharmProjects/mydatabase', f"{username}.db")
+        # db_file = os.path.join('/Users/Dave/golfers', username, f"{username}.db")
+        db_file = f"{username}.db"
+        # conn = sqlite3.connect(db_file)
 
-        # Check if username already exists
-        c.execute("SELECT * FROM users WHERE username=?", (username,))
-        if c.fetchone():
-            # Username already exists, display error message
+        # Get the absolute path of the file
+        # db_file_path = os.path.abspath(db_file)
+        # print(f"Abspath is: {db_file_path}")
+
+        # Check if the user database file already exists
+        if os.path.exists(db_file):
             error = "Username already exists. Please choose a different username."
+            print("Should show error for username existing:", error)
             return render_template('register.html', error=error)
 
-        # If username doesn't exist, insert new user into database
-        c.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", (username, email, password))
-        conn.commit()
+        else:
+            # If user database file does not exist, create a new one for the user
+            print(f"Creating database for user: {username}")
+            conn = sqlite3.connect(db_file)
+            print(f"Database in progress for user: {username}")
+            # c = conn.cursor()
 
-        # Close the cursor and the connection
-        c.close()
-        conn.close()
-
-        # Redirect to login page
-        return redirect(url_for('login'))
+            # Create the users table in the database
+            conn.execute(
+            '''CREATE TABLE IF NOT EXISTS users (name text, username text, email text, password blob, ip_address integer)''')
+            conn.commit()
+            print(f"Database still in progress for user: {username}")
+            # Insert new user into database
+            conn.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)", (name, username, email, hashed_password, ip_address))
+            conn.commit()
+            print(f"Database assembled for user: {username}")
+            # Close the cursor and the connection
+            # c.close()
+            conn.close()
+            print(f"Database created for user: {username}")
+            # Redirect to login page
+            return redirect(url_for('login'))
 
     # If request method is GET, display register form
     return render_template('register.html')
@@ -188,35 +231,52 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("inside login()")
     if request.method == 'POST':
         # Get form values
         username = request.form['username']
         password = request.form['password']
 
-        # Connect to database
-        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
-        conn = sqlite3.connect('./database.db')
-        c = conn.cursor()
+        if os.path.isfile(f"{username}.db"):
+            print(f"Accessing database for user: {username}")
+            conn = sqlite3.connect(f"{username}.db")
+            print(f"Accessed database for user: {username}")
+            print(f"Username: {username} Password: {password}")
+            c = conn.cursor()
 
-        # Check if username and password are correct
-        c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
-        user = c.fetchone()
+            # ***** There is still a bug right here..... if you access a .db without a 'users' table it will crash ****
+            # ***** Will fix when it's an issue, all it should need is another if/else block, long hair no care *****
+            # Get the hashed password for the user
+            # c.execute("SELECT password FROM users WHERE username=?", (username,))
+            c.execute("SELECT * FROM users WHERE username=?", (username,))
+            result = c.fetchone()
 
-        if user:
-            # If username and password are correct, redirect to home page
-            session['user_id'] = user[0]  # Save user_id in session
-            return redirect(url_for('home'))
+            if result:
+                print("inside IF")
+                # Verify password using the stored hash
+                if bcrypt.checkpw(password.encode('utf-8'), result[3]):
+                    print("inside IF IF")
+                    # If username and password are correct, redirect to dashboard page
+                    session['user_id'] = username  # Save username in session
+                    return redirect(url_for('dashboard'))
+            else:
+                # If username and password are incorrect, display error message
+                error = "Incorrect username or password. Please try again."
+                print(f"Error should display: {error}")
+                # return render_template('login.html', error=error)
+                # return redirect(url_for('login', error=error))
+                return redirect(url_for('wrongUser', error='Incorrect username or password. Please try again.'))
+
+            # Close the cursor and the connection
+            c.close()
+            conn.close()
         else:
-            # If username and password are incorrect, display error message
-            error = "Incorrect username or password. Please try again."
-            return render_template('login.html', error=error)
-
-        # Close the cursor and the connection
-        c.close()
-        conn.close()
+            error = "User does not exist."
+            return redirect(url_for('wrongUser', error=error))
 
     # If request method is GET, display login form
     return render_template('login.html')
+    # return redirect(url_for('login', message='You have successfully registered.'))
 
 
 @app.route('/')
@@ -227,6 +287,13 @@ def home():
 @app.route('/changelog')
 def changelog():
     return render_template('changelog.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    # username = current_user.username
+    # return render_template('dashboard.html', username=username)
+    return render_template('dashboard.html')
 
 
 def get_database_filename(ip_address):
@@ -266,7 +333,8 @@ def create_new_database(ip_address):
 @app.route('/practice', methods=['GET', 'POST'])
 def practice():
     # Get the IP address of the user
-    ip_address = request.remote_addr
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    # ip_address = request.remote_addr
     print("Inside practice() dawg")
     print(f"ip address: {ip_address}")
 
@@ -314,7 +382,8 @@ def submit_shot():
         direction = request.form['direction']
 
         # Get the IP address of the user
-        ip_address = request.remote_addr
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # ip_address = request.remote_addr
         print("Inside submit_shot() dawg")
         print(f"ip address: {ip_address}")
 
@@ -415,7 +484,8 @@ def submit_shot():
 def end_practice():
 
     # Get the IP address of the user
-    ip_address = request.remote_addr
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    # ip_address = request.remote_addr
     print("Inside end_practice() dawg")
     print(f"ip address: {ip_address}")
 
@@ -428,8 +498,8 @@ def end_practice():
     c = conn.cursor()
 
     # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    #conn = sqlite3.connect('./practice.db')
-    #c = conn.cursor()
+    # conn = sqlite3.connect('./practice.db')
+    # c = conn.cursor()
     c.execute("UPDATE practice SET direction = 0, distance = 0, hits = 0, total_distance = 0, total_hits = 0, "
               "average_distance = 0")
     conn.commit()

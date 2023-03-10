@@ -1,275 +1,195 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
     <title>Demo Dashboard - Track My Balls</title>
     <style>
+      /* Add container styles */
 
-    .input-table {
-        font-family: Arial, sans-serif;
-        border-collapse: collapse;
-<!--        max-width: 100px;-->
-        margin-bottom: 20px; /* add margin to separate from the previous element */
-    }
+      body {
+        background-color: #f2f2f2;
+      }
 
-    .input-table td, .input-table th {
-        border: 1px solid black;
+      .container {
+        background-color: white;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc !important; /* add a 1px solid border with a gray color */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+
+      .container h1 {
         text-align: center;
-        padding: 8px;
-        vertical-align: middle;
-    }
+        font-size: 3rem;
+<!--        margin-top: 2rem;-->
+      }
 
-    .input-table tr:nth-child(even) {
-        background-color: #dddddd;
-    }
+      .container h2 {
+        text-align: center;
+        font-size: 2rem;
+<!--        margin-top: 2rem;-->
+      }
 
-    .input-table th {
-        background-color: #dddddd;
-        color: black;
-    }
+      .input-title {
+        text-align: center;
+        font-size: 2rem;
+<!--        margin-top: 2rem;-->
+      }
 
-    #input-table td:first-child label{
-        display: block;
-        padding-left: 22%;
-<!--  border: 1px solid black;-->
-<!--  text-align: center;-->
-<!--  padding: 8px;-->
-        font-size: 35px !important;
-        font-weight: bold !important;
-}
+      .direct-title {
+        text-align: center;
+        font-size: 2rem;
+        padding-left: 42.5%;
+<!--        margin-top: 2rem;-->
+      }
 
-    #input-table td:last-child label {
-        padding-left: 11%;
-        display: block;
-        margin-bottom: 5px;
-        font-size: 35px;
-        font-weight: bold;
-    }
+      .container p {
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
 
-    #input-table td:first-child label[for="club"] {
-        font-size: 35px;
-        font-weight: bold;
-    }
+      .container ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
 
-    #input-table {
-        width: 100%;
-    }
+      .container ul li {
+        margin-bottom: 10px;
+      }
 
+      .container a {
+        color: #000;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
 
+      .container a:hover {
+        color: #777;
+      }
 
+      .range-slide::-webkit-slider-thumb {
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        transform: scale(3);
+          z-index: 0;
+      }
 
-    .directionIN {
+      .range-slide {
         -webkit-appearance: none;
-        width: 90% !important;
-        height: 10px !important;
         background-color: transparent;
         margin: 10 0 10px 0 !important;
-    }
+      }
 
-    input[type=range]:focus {
-        outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
+      .directionOUT {
         -webkit-appearance: none;
-        background-color: #fff;
-        border: 2px solid #000;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        cursor: pointer;
-    }
+        width: 98%;
+        height: 0px;
+        background-color: white; /* add this line */
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
 
-    #practice-table {
+      .pract-butts {
+        background-color: #000000;
+        color: white;
+        padding: 30px 40px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 2.5rem;
+        width: 100% !important;
+        margin-bottom: 0 20px;
+      }
+
+      .pract-butts:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+
+      #practice-table {
         font-family: Arial, sans-serif;
         border-collapse: collapse;
-        width: 90%;
-    }
+        width: 100%;
+      }
 
-    #practice-table td, #practice-table th {
-        border: 1px solid black;
-        text-align: center;
-        padding: 8px;
-    }
-
-<!--    #practice-table tr:nth-child(even) {-->
-<!--        background-color: #dddddd;-->
-<!--    }-->
-
-    #practice-table th {
-        background-color: #dddddd;
-        color: black;
-    }
-
-    .directionOUT::-webkit-slider-runnable-track {
-        background-color: transparent;
-    }
-
-    h1 {
-<!--      text-align: center;-->
-        font-size: 3rem;
-        margin-top: 2rem;
-        padding-left: 38%;
-    }
-    #h1-title {
-<!--      text-align: center;-->
-        font-size: 3rem;
-        margin-top: 2rem;
-        padding-left: 31%;
-    }
-
-    h2 {
-<!--      text-align: center;-->
-        font-size: 2rem;
-        margin-top: 2rem;
-        padding-left: 27%;
-    }
-
-    select, input[type="submit"] {
-        width: 90%;
+      .pract-input {
+        width: 100%;
         text-align: center;
         height: 90px;
         font-size: 2.5rem;
-        padding: 5px;
-        margin-bottom: 20px;
         border-radius: 20px;
         border: 1px solid black;
-        margin: 0 auto;
-    }
+<!--        margin: 0 auto;-->
+        padding-left: 13%;
+        padding-right: 13%;
+      }
 
-    #input-table select#club {
-        width: 95%;
-    }
 
-    #input-table select,
-    #input-table input[type="number"] {
-        width: 80%;
-        text-align: center;
-        height: 50px;
-        font-size: 1.2rem;
-        padding: 5px;
-        margin-bottom: 20px;
-        border-radius: 5px;
+<!--&lt;!&ndash;Practice table, THE ONE&ndash;&gt;-->
+      #practice-table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 100% !important;
+      }
+
+      #practice-table td, #practice-table th {
         border: 1px solid black;
-        margin: 0 auto;
-    }
+        text-align: center;
+        padding: 8px;
+      }
 
-    #practice-table.directionOUT {
-        width: 100%;
-    }
-
-    .directionOUT {
-        height: 0px;
-        background-color: lightgray;
-<!--        position: relative;-->
-        border-radius: 5px;
-        margin: 0 auto;
-        width: 99%;
-    }
-
-    .directionOUT::-webkit-slider-runnable-track {
-        background-color: white; /* or any other color of your choice */
-        padding-top: 7%;
-        width: 100%;
-    }
-
-
-.directionOUT::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-<!--  background-color: green !important;-->
-  border: 2px solid #000 !important;
-  width: 15px !important;
-  height: 15px !important;
-  border-radius: 50% !important;
-  cursor: pointer !important;
-}
-
-
-.directionOUT::-webkit-slider-thumb::after {
-    content: attr(value);
-    font-size: 20px;
-
-}
-
-
-
-
-
-    input[type="submit"] {
-        background-color: black;
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    input[type="submit"]:hover {
-        background-color: white;
+      #practice-table th {
+        background-color: #dddddd;
         color: black;
-    }
-
-    label[for="direction"] {
-        display: inline-block;
-        margin-top: 20px;
-        margin-right: 10px;
-        font-size: 35px;
-        font-weight: bold;
-        padding-left: 40%;
-    }
-
-    .directionIN span b {
-        font-size: 35px;
-    }
-
-    .center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-<!--    span.vertical-line {-->
-<!--        position: absolute;-->
-<!--        top: 32.5%;-->
-<!--        left: 15%;-->
-<!--        transform: translate(-50%, -50%);-->
-<!--        font-size: 35px;-->
-<!--        z-index: 1;-->
-<!--    }-->
+      }
 
     </style>
   </head>
   <body>
-<!--  <div class="center">-->
+  <div class="container">
     <h1 id="h1-title">Demo Dashboard 2.0</h1>
     <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>
     <br>
     <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
-        <table id="input-table">
+        <table id="tableClubDistance">
             <tr>
-                <td><label for="club"><u>Select Club</u></label></td>
-                <td><label for="distance" style="padding-left: 20%;"><u>Ball Distance</u></label></td>
+                <td><label for="club" style="padding-left: 20%" class="input-title"><u><b>Select Club</b></u></label></td>
+                <td><label for="distance" style="padding-left: 30%" class="input-title"><u><b>Ball Distance</b></u></label></td>
             </tr>
             <tr>
-                <td><select name="club" id="club">
+                <td><select name="club" id="club" class="pract-input">
                     {% for row in practice_data %}
                         <option value="{{ row[1] }}">{{ row[1] }}</option>
                     {% endfor %}
                 </select></td>
-                <td><input type="number" name="distance" id="distance" min="0"></td>
+                <td><input type="number" name="distance" id="distance" min="0" class="pract-input"></td>
             </tr>
         </table>
 
-        <label for="direction"><u>Direction</u></label>
+        <label for="direction" class="direct-title"><u><b>Direction</b></u></label>
         <br><br><br>
 <!--        <span style="font-size: 35px;"><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span style="font-size: 35px;"><b>R</b></span><span style="position: absolute; top: -10px; left: 50%;">|</span>-->
-        <div style="position: relative; display: inline-block; width: 95%;">
+        <div style="position: relative; display: inline-block; width: 100%;">
             <span style="font-size: 35px;"><b>L</b></span>
-            <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN" style="width: 60%;">
-            <span style="position: absolute; left: 47.6%; top: 60%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
+            <input type="range" name="direction" id="direction" class="range-slide" min="0" max="100" style="width: 93%;">
+            <span style="position: absolute; left: 49.7%; top: 60%; transform: translate(-50%, -50%); font-size: 35px; z-index: 1;"><b>&#124;</b></span>
             <span style="font-size: 35px;"><b>R</b></span>
         </div>
 
 <!--        <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span class="vertical-line">|</span><span style="font-size: 35px;"><b>R</b></span>-->
         <br><br><br><br><br>
-        <input type="submit" value="Submit Shot">
+        <input type="submit" value="Submit Shot" class="pract-butts">
     </form>
 
     <h1><u>Recent Shots</u></h1>
@@ -302,7 +222,7 @@
 <br>
 
     <form method="POST" action="{{ url_for('end_practice') }}">
-      <input type="submit" value="End Practice">
+      <input type="submit" value="End Practice" class="pract-butts">
     </form>
 <script>
 
@@ -362,7 +282,7 @@ function refreshPracticeTable() {
         const total_hits = rowData[6];
         const average_distance = rowData[7];
         const row = table.insertRow(-1);
-        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="directionOUT"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
       });
     });
 }
@@ -393,7 +313,7 @@ form.addEventListener('submit', event => {
 });
 
 </script>
-<!--        </div>-->
+        </div>
 <h3 style ="text-align: center">    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
@@ -406,3 +326,239 @@ form.addEventListener('submit', event => {
       © 2023 David Barker. All rights reserved.
     </div>
 </html>
+
+
+
+
+
+<!--THE OLD DASHBOARD:-->
+<!--    <style>-->
+
+<!--    .input-table {-->
+<!--        font-family: Arial, sans-serif;-->
+<!--        border-collapse: collapse;-->
+<!--&lt;!&ndash;        max-width: 100px;&ndash;&gt;-->
+<!--        margin-bottom: 20px; /* add margin to separate from the previous element */-->
+<!--    }-->
+
+<!--    .input-table td, .input-table th {-->
+<!--        border: 1px solid black;-->
+<!--        text-align: center;-->
+<!--        padding: 8px;-->
+<!--        vertical-align: middle;-->
+<!--    }-->
+
+<!--    .input-table tr:nth-child(even) {-->
+<!--        background-color: #dddddd;-->
+<!--    }-->
+
+<!--    .input-table th {-->
+<!--        background-color: #dddddd;-->
+<!--        color: black;-->
+<!--    }-->
+
+<!--    #input-table td:first-child label{-->
+<!--        display: block;-->
+<!--        padding-left: 22%;-->
+<!--&lt;!&ndash;  border: 1px solid black;&ndash;&gt;-->
+<!--&lt;!&ndash;  text-align: center;&ndash;&gt;-->
+<!--&lt;!&ndash;  padding: 8px;&ndash;&gt;-->
+<!--        font-size: 35px !important;-->
+<!--        font-weight: bold !important;-->
+<!--}-->
+
+<!--    #input-table td:last-child label {-->
+<!--        padding-left: 11%;-->
+<!--        display: block;-->
+<!--        margin-bottom: 5px;-->
+<!--        font-size: 35px;-->
+<!--        font-weight: bold;-->
+<!--    }-->
+
+<!--    #input-table td:first-child label[for="club"] {-->
+<!--        font-size: 35px;-->
+<!--        font-weight: bold;-->
+<!--    }-->
+
+<!--    #input-table {-->
+<!--        width: 100%;-->
+<!--    }-->
+
+
+
+
+<!--    .directionIN {-->
+<!--        -webkit-appearance: none;-->
+<!--        width: 90% !important;-->
+<!--        height: 10px !important;-->
+<!--        background-color: transparent;-->
+<!--        margin: 10 0 10px 0 !important;-->
+<!--    }-->
+
+<!--    input[type=range]:focus {-->
+<!--        outline: none;-->
+<!--    }-->
+
+
+
+
+<!--      input[type="range"]::-webkit-slider-thumb {-->
+<!--        -webkit-appearance: none;-->
+<!--        background-color: #fff;-->
+<!--        border: 2px solid #000;-->
+<!--        width: 100px;-->
+<!--        height: 100px;-->
+<!--        border-radius: 50%;-->
+<!--        cursor: pointer;-->
+<!--      }-->
+
+
+
+<!--    #practice-table td, #practice-table th {-->
+<!--        border: 1px solid black;-->
+<!--        text-align: center;-->
+<!--        padding: 8px;-->
+<!--    }-->
+
+<!--&lt;!&ndash;    #practice-table tr:nth-child(even) {&ndash;&gt;-->
+<!--&lt;!&ndash;        background-color: #dddddd;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--    #practice-table th {-->
+<!--        background-color: #dddddd;-->
+<!--        color: black;-->
+<!--    }-->
+
+<!--    .directionOUT::-webkit-slider-runnable-track {-->
+<!--        background-color: transparent;-->
+<!--    }-->
+
+<!--    h1 {-->
+<!--&lt;!&ndash;      text-align: center;&ndash;&gt;-->
+<!--        font-size: 3rem;-->
+<!--        margin-top: 2rem;-->
+<!--        padding-left: 38%;-->
+<!--    }-->
+<!--    #h1-title {-->
+<!--&lt;!&ndash;      text-align: center;&ndash;&gt;-->
+<!--        font-size: 3rem;-->
+<!--        margin-top: 2rem;-->
+<!--        padding-left: 31%;-->
+<!--    }-->
+
+<!--    h2 {-->
+<!--&lt;!&ndash;      text-align: center;&ndash;&gt;-->
+<!--        font-size: 2rem;-->
+<!--        margin-top: 2rem;-->
+<!--        padding-left: 27%;-->
+<!--    }-->
+
+<!--    select, input[type="submit"] {-->
+<!--        width: 90%;-->
+<!--        text-align: center;-->
+<!--        height: 90px;-->
+<!--        font-size: 2.5rem;-->
+<!--        padding: 5px;-->
+<!--        margin-bottom: 20px;-->
+<!--        border-radius: 20px;-->
+<!--        border: 1px solid black;-->
+<!--        margin: 0 auto;-->
+<!--    }-->
+
+<!--    #input-table select#club {-->
+<!--        width: 95%;-->
+<!--    }-->
+
+<!--    #input-table select,-->
+<!--    #input-table input[type="number"] {-->
+<!--        width: 80%;-->
+<!--        text-align: center;-->
+<!--        height: 50px;-->
+<!--        font-size: 1.2rem;-->
+<!--        padding: 5px;-->
+<!--        margin-bottom: 20px;-->
+<!--        border-radius: 5px;-->
+<!--        border: 1px solid black;-->
+<!--        margin: 0 auto;-->
+<!--    }-->
+
+<!--    #practice-table.directionOUT {-->
+<!--        width: 100%;-->
+<!--    }-->
+
+<!--    .directionOUT {-->
+<!--        height: 0px;-->
+<!--        background-color: lightgray;-->
+<!--&lt;!&ndash;        position: relative;&ndash;&gt;-->
+<!--        border-radius: 5px;-->
+<!--        margin: 0 auto;-->
+<!--        width: 99%;-->
+<!--    }-->
+
+<!--    .directionOUT::-webkit-slider-runnable-track {-->
+<!--        background-color: white; /* or any other color of your choice */-->
+<!--        padding-top: 7%;-->
+<!--        width: 100%;-->
+<!--    }-->
+
+
+<!--.directionOUT::-webkit-slider-thumb {-->
+<!--  -webkit-appearance: none !important;-->
+<!--&lt;!&ndash;  background-color: green !important;&ndash;&gt;-->
+<!--  border: 2px solid #000 !important;-->
+<!--  width: 15px !important;-->
+<!--  height: 15px !important;-->
+<!--  border-radius: 50% !important;-->
+<!--  cursor: pointer !important;-->
+<!--}-->
+
+
+<!--.directionOUT::-webkit-slider-thumb::after {-->
+<!--    content: attr(value);-->
+<!--    font-size: 20px;-->
+
+<!--}-->
+
+
+
+
+
+<!--    input[type="submit"] {-->
+<!--        background-color: black;-->
+<!--        color: white;-->
+<!--        cursor: pointer;-->
+<!--        transition: all 0.3s ease;-->
+<!--    }-->
+
+<!--    input[type="submit"]:hover {-->
+<!--        background-color: white;-->
+<!--        color: black;-->
+<!--    }-->
+
+<!--    label[for="direction"] {-->
+<!--        display: inline-block;-->
+<!--        margin-top: 20px;-->
+<!--        margin-right: 10px;-->
+<!--        font-size: 35px;-->
+<!--        font-weight: bold;-->
+<!--        padding-left: 40%;-->
+<!--    }-->
+
+<!--    .directionIN span b {-->
+<!--        font-size: 35px;-->
+<!--    }-->
+
+<!--    .center {-->
+<!--        display: flex;-->
+<!--        flex-direction: column;-->
+<!--        align-items: center;-->
+<!--    }-->
+
+<!--&lt;!&ndash;    span.vertical-line {&ndash;&gt;-->
+<!--&lt;!&ndash;        position: absolute;&ndash;&gt;-->
+<!--&lt;!&ndash;        top: 32.5%;&ndash;&gt;-->
+<!--&lt;!&ndash;        left: 15%;&ndash;&gt;-->
+<!--&lt;!&ndash;        transform: translate(-50%, -50%);&ndash;&gt;-->
+<!--&lt;!&ndash;        font-size: 35px;&ndash;&gt;-->
+<!--&lt;!&ndash;        z-index: 1;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->

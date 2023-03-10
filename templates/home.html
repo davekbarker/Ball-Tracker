@@ -1,92 +1,117 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--  <head>-->
-<!--    <title>Track My Balls</title>-->
-<!--  </head>-->
-<!--  <body>-->
-<!--    <h1>Welcome to Track My Balls</h1>-->
-<!--    <form method="POST" action="{{ url_for('login') }}">-->
-<!--      <h2>Login</h2>-->
-<!--      <label for="login-username">Username:</label>-->
-<!--      <input type="text" name="username" id="login-username">-->
-<!--      <br>-->
-<!--      <label for="login-password">Password:</label>-->
-<!--      <input type="password" name="password" id="login-password">-->
-<!--      <br>-->
-<!--      <input type="submit" value="Login">-->
-<!--    </form>-->
-<!--    <form method="POST" action="{{ url_for('register') }}">-->
-<!--      <h2>Register</h2>-->
-<!--      <label for="register-username">Username:</label>-->
-<!--      <input type="text" name="username" id="register-username">-->
-<!--      <br>-->
-<!--      <label for="register-email">Email:</label>-->
-<!--      <input type="email" name="email" id="register-email">-->
-<!--      <br>-->
-<!--      <label for="register-password">Password:</label>-->
-<!--      <input type="password" name="password" id="register-password">-->
-<!--      <br>-->
-<!--      <input type="submit" value="Register">-->
-<!--    </form>-->
-<!--    <form method="POST" action="{{ url_for('practice') }}">-->
-<!--      <h2>Practice</h2>-->
-<!--      <input type="submit" value="Practice">-->
-<!--    </form>-->
-<!--    <br>-->
-<!--    <br>-->
-<!--    <form method="GET" action="/index">-->
-<!--      <input type="submit" value="Go to Index Page">-->
-<!--    </form>-->
-<!--  </body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
     <title>Track My Balls</title>
-    <style>
+  <style>
+  /* Add some styling to make the page look nice */
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f2f2;
+  }
 
-      .log/reg-butts {
-        display: flex;
-        justify-content: center;
-      }
-      .log/reg-demo {
-        background-color: black;
-        border-radius: 25px;
-        color: white;
-        padding: 20px 40px;
-        margin: 0 10px;
-        width: 30%;
-        font-size: 40px;
-      }
+  .container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 800px;
+    text-align: center;
+  }
 
-      .demo-butts {
-        display: flex;
-        justify-content: center;
-      }
+  h1 {
+    margin-bottom: 30px;
+  }
 
-      .button-demo {
-        background-color: black;
-        border-radius: 25px;
-        color: white;
-        padding: 20px 40px;
-        margin: 0 10px;
-        width: 30%;
-        font-size: 40px;
-      }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+  }
 
-      .button-demo:hover {
-        background-color: white;
-        color: black;
-      }
+  input[type="submit"] {
+    background-color: #000000;
+    color: white;
+    padding: 20px 40px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
-      h1 {
-        text-align: center;
-        font-size: 4rem;
-        margin-top: 2rem;
-      }
-    </style>
+  /* Add hover effect for the button */
+  input[type="submit"]:hover {
+    background-color: white;
+    color: black;
+  }
+
+  /* Add styling for the new buttons */
+  input[type="button"] {
+    background-color: #000000;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 30%;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+  }
+
+  /* Add hover effect for the new buttons */
+  input[type="button"]:hover {
+    background-color: white;
+    color: black;
+
+  }
+
+  .button-demo {
+    background-color: #000000;
+    color: white;
+    padding: 30px 40px;
+    border: 1px solid black;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 25px;
+    width: 50%;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left 10px;
+  }
+
+  /* Add hover effect for the new buttons */
+  .button-demo:hover {
+    background-color: white;
+    color: black;
+  }
+
+  .demo-butts {
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  </style>
   </head>
   <body>
+    <div class="container">
     <h1>Welcome to Track My Balls</h1>
     <br>
 <!--    <img src="home_main.jpg" alt="Home Page Hitter">-->
@@ -94,69 +119,35 @@
     <div style="text-align: center;">
     <img src="https://freesvg.org/img/1538176837.png" alt="Home Page Hitter">
     </div>
+
     <br><br><br>
-<!--        <form method="GET" action="/index">-->
-<!--      <input type="submit" value="Demo Dashboard 1.0">-->
-<!--    </form>-->
+
     <div class="demo-butts">
       <button class="button-demo" onclick="location.href='{{ url_for('index') }}'">Demo Dashboard 1.0</button>
       <button class="button-demo" onclick="location.href='{{ url_for('practice') }}'">Demo Dashboard 2.0</button>
     </div>
+
     <br>
+
     <div class="demo-butts">
       <button class="button-demo" onclick="location.href='{{ url_for('login') }}'">Login</button>
       <button class="button-demo" onclick="location.href='{{ url_for('register') }}'">Register</button>
     </div>
-  <br>
+
+    <br>
+
     <div class="demo-butts">
       <button class="button-demo" onclick="location.href='{{ url_for('changelog') }}'">Updates</button>
     </div>
-  <br>
-  <br>
-  <br>
-<!--      <form method="POST" action="{{ url_for('register') }}">-->
-<!--      <h2>Register</h2>-->
-<!--      <label for="register-username">Username:</label>-->
-<!--      <input type="text" name="username" id="register-username">-->
-<!--      <br>-->
-<!--      <label for="register-email">Email:</label>-->
-<!--      <input type="email" name="email" id="register-email">-->
-<!--      <br>-->
-<!--      <label for="register-password">Password:</label>-->
-<!--      <input type="password" name="password" id="register-password">-->
-<!--      <br>-->
-<!--      <input type="submit" value="Register">-->
-<!--      <button class="my-button" onclick="location.href='{{ url_for('register') }}'">Register 2</button>-->
-<!--    </form>-->
-<!--        </form>-->
-<!--    <br>-->
-<!--    <br>-->
-<!--        <form method="GET" action="/index">-->
-<!--      <input type="submit" value="Login">-->
-<!--    </form>-->
 
-<!--    <br>-->
-<!--  <br>-->
-<!--  <br>-->
-<!--  <br>-->
-<!--      <form method="POST" action="{{ url_for('range_time') }}">-->
-<!--      <h2>Login</h2>-->
-<!--      <label for="login-username">Username:</label>-->
-<!--      <input type="text" name="username" id="login-username">-->
-<!--      <br>-->
-<!--      <label for="login-password">Password:</label>-->
-<!--      <input type="password" name="password" id="login-password">-->
-<!--      <br>-->
-<!--      <input type="submit" value="Login">-->
-<!--      <button class="my-button" onclick="location.href='{{ url_for('range_time') }}'">Login2</button>-->
-<!--    </form>-->
-<!--    <form method="GET" action="/register">-->
-<!--      <input type="submit" value="Register">-->
-<!--    </form>-->
-<!--  <br><br>-->
+    <br>
+    <br>
+    <br>
 
     <div style="text-align: center;">
       © 2023 David Barker. All rights reserved.
+    </div>
+
     </div>
   </body>
 </html>

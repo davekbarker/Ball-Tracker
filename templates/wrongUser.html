@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
+    <style>
+      /* Add some styling to make the page look nice */
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f2f2;
+      }
+
+      form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 500px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+      }
+
+      input[type="button"] {
+        background-color: #000000;
+        color: white;
+        padding: 20px 40px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      /* Add hover effect for the buttons */
+      input[type="button"]:hover {
+        background-color: white;
+        color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="POST">
+      <h1>Incorrect username or password</h1>
+      <h1>Please try again or register</h1>
+
+
+      <input type="button" value="Login" onclick="location.href='{{ url_for('login') }}'">
+      <br/><br/>
+      <input type="button" value="Register" onclick="location.href='{{ url_for('register') }}'">
+      <br/><br/>
+      <input type="button" value="Home" onclick="location.href='{{ url_for('home') }}'">
+    </form>
+  </body>
+</html>

@@ -19,6 +19,7 @@
         box-sizing: border-box;
         border: 1px solid #ccc !important; /* add a 1px solid border with a gray color */
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
       }
 
 
@@ -183,7 +184,7 @@
         <div style="position: relative; display: inline-block; width: 100%;">
             <span style="font-size: 35px;"><b>L</b></span>
             <input type="range" name="direction" id="direction" class="range-slide" min="0" max="100" style="width: 93%;">
-            <span style="position: absolute; left: 49.7%; top: 60%; transform: translate(-50%, -50%); font-size: 35px; z-index: 1;"><b>&#124;</b></span>
+            <span style="position: absolute; left: 49.7%; top: 60%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
             <span style="font-size: 35px;"><b>R</b></span>
         </div>
 
@@ -227,11 +228,14 @@
 <script>
 
 function end_practice() {
+  console.log('end_practice()')
   fetch('/end_practice', { method: 'POST' })
+    console.log('end_practice() fetch')
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to clear practice data');
          }
+        console.log('end_practice() to home')
         window.location.href = '{{ url_for("home") }}';
       })
        .catch(error => {
@@ -240,8 +244,10 @@ function end_practice() {
        });
     }
   window.addEventListener('load', function() {
+    console.log('end_practice() load')
     fetch('/end_practice', { method: 'POST' })
       .then(() => refreshPracticeTable());
+      console.log('end_practice() method')
 });
 
 var timeLeft = 300; // 5 minutes in seconds
@@ -266,7 +272,11 @@ function refreshPracticeTable() {
   fetch('/practice_stats')
     .then(response => response.json())
     .then(data => {
+      console.log(`Here is the data: ${data}`);
+      console.log('data in an array:')
       console.log(data)
+      console.log('hi')
+      console.log('hi X 2')
       const table = document.getElementById('practice-table');
       table.innerHTML = ''; // clear the table rows before inserting new data
       const headerRow = table.insertRow(0);
@@ -282,7 +292,28 @@ function refreshPracticeTable() {
         const total_hits = rowData[6];
         const average_distance = rowData[7];
         const row = table.insertRow(-1);
-        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+
+        // get all the range-slide input elements
+        const rangeSlides = document.getElementsByClassName('range-slide');
+
+        // loop through each input element and add an event listener to log its value when it changes
+        for (let i = 0; i < rangeSlides.length; i++) {
+            rangeSlides[i].addEventListener('change', (event) => {
+                console.log(`range slide ${i} value: ${event.target.value}`);
+            });
+        }
+
+        // add console.log statements to log the values
+        console.log('club:', club);
+        console.log('direction:', direction);
+        console.log('hits:', hits);
+        console.log('average_distance:', average_distance);
+        console.log('total_distance:', total_distance);
+
+
+<!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
+        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+
       });
     });
 }
@@ -293,10 +324,14 @@ document.addEventListener('DOMContentLoaded', refreshPracticeTable);
 // Call the refreshPracticeTable() function after submitting a shot
 const form = document.getElementById('shot-form');
 form.addEventListener('submit', event => {
+  console.log('submit event')
   event.preventDefault(); // prevent form submission
 
   const distanceInput = document.getElementById('distance');
   const distanceValue = distanceInput.value;
+
+  console.log('distance input: ${distanceInput}')
+  console.log('distance value: ${distanceValue}')
 
   if (distanceValue === '' || distanceValue === '0') {
     alert("It doesn't count if your ball stays in the tee box!");
@@ -307,6 +342,7 @@ form.addEventListener('submit', event => {
 
   fetch('/submit_shot', { method: 'POST', body: formData })
     .then(() => {
+    console.log('submit shot')
 <!--      distanceInput.value = ''; // clear the distance input after submission-->
       refreshPracticeTable();
     });
@@ -314,12 +350,13 @@ form.addEventListener('submit', event => {
 
 </script>
         </div>
-<h3 style ="text-align: center">    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+<h3 style ="text-align: center">
+    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
     <p>When the timer runs out the form will reset</p>
-        <br>
-      <p><u>**please note you must include a distance with this version for it to calculate**</u></p></h3>
+    <br>
+    <p><u>**please note you must include a distance with this version for it to calculate**</u></p></h3>
   </body>
   <br><br><br><br><br>
     <div style="text-align: center;">

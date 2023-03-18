@@ -205,22 +205,30 @@ def register():
         else:
             # If user database file does not exist, create a new one for the user
             print(f"Creating database for user: {username}")
-            conn = sqlite3.connect(db_file)
+            # ##### conn = sqlite3.connect(db_file) ######
             print(f"Database in progress for user: {username}")
             # c = conn.cursor()
 
             # Create the users table in the database
-            conn.execute(
-            '''CREATE TABLE IF NOT EXISTS users (name text, username text, email text, password blob, ip_address integer)''')
-            conn.commit()
-            print(f"Database still in progress for user: {username}")
-            # Insert new user into database
-            conn.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)", (name, username, email, hashed_password, ip_address))
-            conn.commit()
+            # ##### conn.execute('''CREATE TABLE IF NOT EXISTS users
+            # #####              (name text, username text, email text, password blob, ip_address integer)''')
+            # ##### conn.commit()
+            # print(f"Database being assembled for user: {username}")
+            # # Insert new user into database
+            # ##### conn.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)",
+            # #####              (name, username, email, hashed_password, ip_address))
+            # ##### conn.commit()
             print(f"Database assembled for user: {username}")
+
+            # Not sure about this code.......
+            # Create the practice table in the user's database
+            create_user_database(name, username, email, hashed_password, ip_address)
+            print(f"Database completely assembled for user: {username}")
+
+
             # Close the cursor and the connection
             # c.close()
-            conn.close()
+            # ##### conn.close()
             print(f"Database created for user: {username}")
             # Redirect to login page
             return redirect(url_for('login'))
@@ -257,7 +265,7 @@ def login():
                 if bcrypt.checkpw(password.encode('utf-8'), result[3]):
                     print("inside IF IF")
                     # If username and password are correct, redirect to dashboard page
-                    session['user_id'] = username  # Save username in session
+                    session['username'] = username  # Save username in session
                     return redirect(url_for('dashboard'))
             else:
                 # If username and password are incorrect, display error message
@@ -296,8 +304,57 @@ def dashboard():
     return render_template('dashboard.html')
 
 
+# NOT USED CAPT'N <--- These are lies
+def get_user_database_filename(username):
+    # will most likely need to change to '..' deployed
+    # return f'./user_{user_id}.db'
+    return f'{username}.db'
+
+
 def get_database_filename(ip_address):
-    return f'practice.{ip_address}.db'
+    # will most likely need to change to '..' deployed
+    return f'./practice.{ip_address}.db'
+
+
+def create_user_database(username, name, email, hashed_password, ip_address):
+    conn = sqlite3.connect(get_user_database_filename(username))
+    c = conn.cursor()
+
+    # Create the users table
+    c.execute('''CREATE TABLE IF NOT EXISTS users 
+              (name TEXT, username TEXT PRIMARY KEY, email TEXT, password BLOB, ip_address TEXT,
+              first_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP, last_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+
+
+    # Insert the user's information into the users table
+    # c.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)",
+    #           (name, username, email, hashed_password, ip_address))
+    c.execute("INSERT INTO users (name, username, email, password, ip_address) \
+               VALUES (?, ?, ?, ?, ?)", (name, username, email, hashed_password, ip_address))
+
+    # Create the table
+    c.execute('''CREATE TABLE stats
+             (id INTEGER NOT NULL,
+             club TEXT PRIMARY KEY,
+             direction INTEGER NOT NULL DEFAULT 0,
+             hits INTEGER NOT NULL DEFAULT 0,
+             distance INTEGER NOT NULL DEFAULT 0,
+             total_distance INTEGER NOT NULL DEFAULT 0,
+             total_hits INTEGER NOT NULL DEFAULT 0,
+             average_distance INTEGER NOT NULL DEFAULT 0,
+             username TEXT)''')
+
+    clubs = ['Driver', 'Wood', 'Hybrid', 'Iron', 'Wedge']
+    for i, club in enumerate(clubs):
+        c.execute("INSERT INTO stats (id, club, direction, hits, distance, total_distance, total_hits, "
+                  "average_distance, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  (i + 1, club, 0, 0, 0, 0, 0, 0, username))
+
+    # Save (commit) the changes
+    conn.commit()
+
+    # Close the connection
+    conn.close()
 
 
 def create_new_database(ip_address):
@@ -380,7 +437,7 @@ def submit_shot():
         club = request.form['club']
         distance = request.form['distance']
         direction = request.form['direction']
-
+        print(f"club: {club} distance: {distance} direction: {direction}")
         # Get the IP address of the user
         ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
         # ip_address = request.remote_addr
@@ -511,7 +568,7 @@ def end_practice():
 def practice_stats():
 
     # Get the IP address of the user
-    ip_address = request.remote_addr
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     print("Inside practice_stats() dawg")
     print(f"ip address: {ip_address}")
 
@@ -530,7 +587,7 @@ def practice_stats():
     c.execute("SELECT * FROM practice")
     print("capt practice_stats")
     practice_data = c.fetchall()
-    print(practice_data)
+    # print(practice_data)
     conn.close()
     print("practice_stats 2")
     print(practice_data)

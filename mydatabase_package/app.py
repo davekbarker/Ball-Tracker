@@ -3,6 +3,7 @@ import os
 import sys
 import sqlite3
 from flask import Flask, render_template, g, request, redirect, url_for, session, jsonify
+from flask_session import Session
 # from flask_login import LoginManager
 
 # DATABASES_DIR = "/Users/Dave/PycharmProjects/mydatabase/databases/"
@@ -12,6 +13,16 @@ from flask import Flask, render_template, g, request, redirect, url_for, session
 app = Flask(__name__, template_folder='../templates')
 # app = Flask(__name__, template_folder='/Users/Dave/PycharmProjects/mydatabase/templates')
 # app = Flask(__name__, template_folder='/root/Ball-Tracker/templates')
+
+# Configure Flask-Session
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = './session_files'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_FILE_THRESHOLD'] = 100
+app.config['SESSION_FILE_MODE'] = 0o600
+
+Session(app)
 
 app.config.from_mapping(
     SECRET_KEY='dev',
@@ -256,7 +267,7 @@ def login():
             # ***** Will fix when it's an issue, all it should need is another if/else block, long hair no care *****
             # Get the hashed password for the user
             # c.execute("SELECT password FROM users WHERE username=?", (username,))
-            c.execute("SELECT * FROM users WHERE username=?", (username,))
+            c.execute("SELECT * FROM user WHERE username=?", (username,))
             result = c.fetchone()
 
             if result:
@@ -266,6 +277,7 @@ def login():
                     print("inside IF IF")
                     # If username and password are correct, redirect to dashboard page
                     session['username'] = username  # Save username in session
+                    print(f"Session username set: {session['username']}")
                     return redirect(url_for('dashboard'))
             else:
                 # If username and password are incorrect, display error message
@@ -297,11 +309,61 @@ def changelog():
     return render_template('changelog.html')
 
 
+@app.route('/range_user')
+def range_user():
+    # EDIT THIS TO MAKE THE SHIT WORK**********
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('range_user.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/edit_clubs')
+def edit_clubs():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('edit_clubs.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/putt_user')
+def putt_user():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('putt_user.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/dashboard')
 def dashboard():
-    # username = current_user.username
-    # return render_template('dashboard.html', username=username)
-    return render_template('dashboard.html')
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('dashboard.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/logout')
+def logout():
+    # Remove the 'username' from the session if it's there
+    session.pop('username', None)
+
+    # Redirect the user to the login or home page
+    return redirect(url_for('home'))
+
+
+# @app.route('/dashboard')
+# def dashboard():
+#     # username = current_user.username
+#     # return render_template('dashboard.html', username=username)
+#     return render_template('dashboard.html')
 
 
 # NOT USED CAPT'N <--- These are lies
@@ -321,19 +383,18 @@ def create_user_database(username, name, email, hashed_password, ip_address):
     c = conn.cursor()
 
     # Create the users table
-    c.execute('''CREATE TABLE IF NOT EXISTS users 
+    c.execute('''CREATE TABLE IF NOT EXISTS user 
               (name TEXT, username TEXT PRIMARY KEY, email TEXT, password BLOB, ip_address TEXT,
               first_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP, last_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-
 
     # Insert the user's information into the users table
     # c.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)",
     #           (name, username, email, hashed_password, ip_address))
-    c.execute("INSERT INTO users (name, username, email, password, ip_address) \
+    c.execute("INSERT INTO user (name, username, email, password, ip_address) \
                VALUES (?, ?, ?, ?, ?)", (name, username, email, hashed_password, ip_address))
 
     # Create the table
-    c.execute('''CREATE TABLE stats
+    c.execute('''CREATE TABLE clubs
              (id INTEGER NOT NULL,
              club TEXT PRIMARY KEY,
              direction INTEGER NOT NULL DEFAULT 0,
@@ -346,9 +407,20 @@ def create_user_database(username, name, email, hashed_password, ip_address):
 
     clubs = ['Driver', 'Wood', 'Hybrid', 'Iron', 'Wedge']
     for i, club in enumerate(clubs):
-        c.execute("INSERT INTO stats (id, club, direction, hits, distance, total_distance, total_hits, "
+        c.execute("INSERT INTO clubs (id, club, direction, hits, distance, total_distance, total_hits, "
                   "average_distance, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                   (i + 1, club, 0, 0, 0, 0, 0, 0, username))
+
+    c.execute('''CREATE TABLE putts
+                 (actual_distance INTEGER PRIMARY KEY,
+                  average_distance INTEGER,
+                  average_direction INTEGER,
+                  average_putts INTEGER)''')
+
+    distances = [1, 3, 5, 8, 10, 13, 15, 18, 20]
+    for distance in distances:
+        c.execute("INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts) VALUES (?, ?, ?, ?)",
+                  (distance, 0, 0, 0))
 
     # Save (commit) the changes
     conn.commit()
@@ -592,6 +664,34 @@ def practice_stats():
     print("practice_stats 2")
     print(practice_data)
     return jsonify(practice_data)
+
+
+# practice_stats turned to user_stats
+@app.route('/user_stats', methods=['GET', 'POST'])
+def user_stats():
+
+    if 'username' in session:
+        username = session['username']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        c.execute("SELECT * FROM clubs")
+        print("capt user_stats 1")
+        user_club_data = c.fetchall()
+
+        c.execute("SELECT * FROM putts")
+        print("capt user_stats 2")
+        user_putt_data = c.fetchall()
+
+        print(f"Session: {session}")
+        print("user_stats 3")
+        print(f"user club data: {user_club_data}")
+        print(f"user putt data: {user_putt_data}")
+        return jsonify(user_putt_data, user_club_data)
+    else:
+        return redirect(url_for('login'))
+
 
 
 if __name__ == '__main__':

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
+    <title>Demo Dashboard - Track My Balls</title>
+    <style>
+      /* Add container styles */
+
+      body {
+        background-color: #f2f2f2;
+      }
+
+      .container {
+        background-color: white;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc !important; /* add a 1px solid border with a gray color */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+      }
+
+
+      .container h1 {
+        text-align: center;
+        font-size: 3rem;
+<!--        margin-top: 2rem;-->
+      }
+
+      .container h2 {
+        text-align: center;
+        font-size: 2rem;
+<!--        margin-top: 2rem;-->
+      }
+
+      .input-title {
+        text-align: center;
+        font-size: 2rem;
+<!--        margin-top: 2rem;-->
+      }
+
+      .direct-title {
+        text-align: center;
+        font-size: 2rem;
+        padding-left: 42.5%;
+<!--        margin-top: 2rem;-->
+      }
+
+      .container p {
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+
+      .container ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .container ul li {
+        margin-bottom: 10px;
+      }
+
+      .container a {
+        color: #000;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .container a:hover {
+        color: #777;
+      }
+
+      .range-slide::-webkit-slider-thumb {
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        transform: scale(3);
+          z-index: 0;
+      }
+
+      .range-slide {
+        -webkit-appearance: none;
+        background-color: transparent;
+        margin: 10 0 10px 0 !important;
+      }
+
+      .directionOUT {
+        -webkit-appearance: none;
+        width: 98%;
+        height: 0px;
+        background-color: white; /* add this line */
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
+
+      .pract-butts {
+        background-color: #000000;
+        color: white;
+        padding: 30px 40px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 2.5rem;
+        width: 100% !important;
+        margin-bottom: 0 20px;
+      }
+
+      .pract-butts:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+
+      #practice-table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .pract-input {
+        width: 100%;
+        text-align: center;
+        height: 90px;
+        font-size: 2.5rem;
+        border-radius: 20px;
+        border: 1px solid black;
+<!--        margin: 0 auto;-->
+        padding-left: 13%;
+        padding-right: 13%;
+      }
+
+
+<!--&lt;!&ndash;Practice table, THE ONE&ndash;&gt;-->
+      #practice-table {
+        font-family: Arial, sans-serif;
+        border-collapse: collapse;
+        width: 100% !important;
+      }
+
+      #practice-table td, #practice-table th {
+        border: 1px solid black;
+        text-align: center;
+        padding: 8px;
+      }
+
+      #practice-table th {
+        background-color: #dddddd;
+        color: black;
+      }
+
+    </style>
+  </head>
+  <body>
+  <div class="container">
+    <h1 id="h1-title">Putting Practice for {{ username }}</h1>
+      <p> Still need to finish EVERYTHIG on the back end of this</p>
+<!--    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>-->
+    <br>
+    <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
+        <table id="tableClubDistance">
+            <tr>
+                <td><label for="club" style="padding-left: 20%" class="input-title"><u><b>Select Club</b></u></label></td>
+                <td><label for="distance" style="padding-left: 30%" class="input-title"><u><b>Ball Distance</b></u></label></td>
+            </tr>
+            <tr>
+                <td><select name="club" id="club" class="pract-input">
+                    {% for row in practice_data %}
+                        <option value="{{ row[1] }}">{{ row[1] }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><input type="number" name="distance" id="distance" min="0" class="pract-input"></td>
+            </tr>
+        </table>
+
+        <label for="direction" class="direct-title"><u><b>Direction</b></u></label>
+        <br><br><br>
+<!--        <span style="font-size: 35px;"><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span style="font-size: 35px;"><b>R</b></span><span style="position: absolute; top: -10px; left: 50%;">|</span>-->
+        <div style="position: relative; display: inline-block; width: 100%;">
+            <span style="font-size: 35px;"><b>L</b></span>
+            <input type="range" name="direction" id="direction" class="range-slide" min="0" max="100" style="width: 93%;">
+            <span style="position: absolute; left: 49.7%; top: 60%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
+            <span style="font-size: 35px;"><b>R</b></span>
+        </div>
+
+<!--        <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span class="vertical-line">|</span><span style="font-size: 35px;"><b>R</b></span>-->
+        <br><br><br><br><br>
+        <input type="submit" value="Submit Shot" class="pract-butts">
+    </form>
+
+    <h1><u>Recent Shots</u></h1>
+
+    <table id="practice-table">
+  <tr>
+    <th>ID</th>
+    <th>Club</th>
+    <th>Direction</th>
+    <th>Hits</th>
+    <th>Distance</th>
+    <th>Total Distance</th>
+    <th>Total Hits</th>
+    <th>Average Distance</th>
+  </tr>
+  {% for row in data %}
+  <tr>
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+    <td>{{ row[3] }}</td>
+    <td>{{ row[4] }}</td>
+    <td>{{ row[5] }}</td>
+    <td>{{ row[6] }}</td>
+    <td>{{ row[7] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<br>
+<br>
+
+    <form action="{{ url_for('dashboard') }}">
+      <input type="submit" value="Back To Dashboard" class="pract-butts">
+    </form>
+<script>
+
+function end_practice() {
+  console.log('end_practice()')
+  fetch('/end_practice', { method: 'POST' })
+    console.log('end_practice() fetch')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to clear practice data');
+         }
+        console.log('end_practice() to home')
+        window.location.href = '{{ url_for("home") }}';
+      })
+       .catch(error => {
+         console.error(error);
+          alert('Failed to clear practice data');
+       });
+    }
+  window.addEventListener('load', function() {
+    console.log('end_practice() load')
+    fetch('/end_practice', { method: 'POST' })
+      .then(() => refreshPracticeTable());
+      console.log('end_practice() method')
+});
+
+var timeLeft = 300; // 5 minutes in seconds
+
+<!--function countdown() {-->
+<!--  var timerElement = document.getElementById("time-left");-->
+<!--  var minutes = Math.floor(timeLeft / 60);-->
+<!--  var seconds = timeLeft % 60;-->
+<!--  var timeString = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');-->
+<!--  timerElement.textContent = timeString;-->
+<!--  timeLeft&#45;&#45;;-->
+<!--  if (timeLeft < 0) {-->
+<!--    clearInterval(countdownTimer);-->
+<!--    alert("Practice has ended!");-->
+<!--    window.location.href = "{{ url_for('home') }}";-->
+<!--  }-->
+<!--}-->
+<!--countdown();-->
+<!--var countdownTimer = setInterval(countdown, 1000);-->
+
+function refreshPracticeTable() {
+  fetch('/practice_stats')
+    .then(response => response.json())
+    .then(data => {
+      console.log(`Here is the data: ${data}`);
+      console.log('data in an array:')
+      console.log(data)
+      console.log('hi')
+      console.log('hi X 2')
+      const table = document.getElementById('practice-table');
+      table.innerHTML = ''; // clear the table rows before inserting new data
+      const headerRow = table.insertRow(0);
+      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Average Distance</th><th>Total Distance</th>';
+
+      data.forEach(rowData => {
+        const id = rowData[0];
+        const club = rowData[1];
+        const direction = rowData[2];
+        const hits = rowData[3];
+        const distance = rowData[4];
+        const total_distance = rowData[5];
+        const total_hits = rowData[6];
+        const average_distance = rowData[7];
+        const row = table.insertRow(-1);
+
+        // get all the range-slide input elements
+        const rangeSlides = document.getElementsByClassName('range-slide');
+
+        // loop through each input element and add an event listener to log its value when it changes
+        for (let i = 0; i < rangeSlides.length; i++) {
+            rangeSlides[i].addEventListener('change', (event) => {
+                console.log(`range slide ${i} value: ${event.target.value}`);
+            });
+        }
+
+        // add console.log statements to log the values
+        console.log('club:', club);
+        console.log('direction:', direction);
+        console.log('hits:', hits);
+        console.log('average_distance:', average_distance);
+        console.log('total_distance:', total_distance);
+
+
+<!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
+        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+
+      });
+    });
+}
+
+// Call the refreshPracticeTable() function when the page loads
+document.addEventListener('DOMContentLoaded', refreshPracticeTable);
+
+// Call the refreshPracticeTable() function after submitting a shot
+const form = document.getElementById('shot-form');
+form.addEventListener('submit', event => {
+  console.log('submit event')
+  event.preventDefault(); // prevent form submission
+
+  const distanceInput = document.getElementById('distance');
+  const distanceValue = distanceInput.value;
+
+  console.log('distance input: ${distanceInput}')
+  console.log('distance value: ${distanceValue}')
+
+  if (distanceValue === '' || distanceValue === '0') {
+    alert("It doesn't count if your ball stays in the tee box!");
+    return;
+  }
+
+  const formData = new FormData(event.target);
+
+  fetch('/submit_shot', { method: 'POST', body: formData })
+    .then(() => {
+    console.log('submit shot')
+<!--      distanceInput.value = ''; // clear the distance input after submission-->
+      refreshPracticeTable();
+    });
+});
+
+</script>
+        </div>
+<h3 style ="text-align: center">
+    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+    <p>Click Submit Shot and watch the magic happen!</p>
+    <br>
+    <p>When the timer runs out the form will reset</p>
+    <br>
+    <p><u>**please note you must include a distance with this version for it to calculate**</u></p></h3>
+  </body>
+  <br><br><br><br><br>
+    <div style="text-align: center;">
+      © 2023 David Barker. All rights reserved.
+    </div>
+</html>

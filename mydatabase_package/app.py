@@ -315,7 +315,18 @@ def range_user():
     if 'username' in session:
         username = session['username']
         print(f"Session: {session}")
-        return render_template('range_user.html', username=username)
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        c.execute("SELECT * FROM clubs")
+        user_club_data = c.fetchall()
+
+        return render_template("range_user.html", user_club_data=user_club_data, username=username)
+
+
+
+        # return render_template('range_user.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -335,7 +346,14 @@ def putt_user():
     if 'username' in session:
         username = session['username']
         print(f"Session: {session}")
-        return render_template('putt_user.html', username=username)
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        c.execute("SELECT * FROM putts")
+        user_putt_data = c.fetchall()
+
+        return render_template('putt_user.html', username=username, user_putt_data=user_putt_data)
     else:
         return redirect(url_for('login'))
 
@@ -346,6 +364,16 @@ def dashboard():
         username = session['username']
         print(f"Session: {session}")
         return render_template('dashboard.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/practice_page')
+def practice_page():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('practice_page.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -413,14 +441,17 @@ def create_user_database(username, name, email, hashed_password, ip_address):
 
     c.execute('''CREATE TABLE putts
                  (actual_distance INTEGER PRIMARY KEY,
-                  average_distance INTEGER,
-                  average_direction INTEGER,
-                  average_putts INTEGER)''')
+                  average_distance INTEGER NOT NULL DEFAULT 0,
+                  average_direction INTEGER NOT NULL DEFAULT 0,
+                  average_putts INTEGER NOT NULL DEFAULT 0,
+                  hits INTEGER NOT NULL DEFAULT 0,
+                  total_distance NOT NULL DEFAULT 0)''')
 
     distances = [1, 3, 5, 8, 10, 13, 15, 18, 20]
     for distance in distances:
-        c.execute("INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts) VALUES (?, ?, ?, ?)",
-                  (distance, 0, 0, 0))
+        c.execute("INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, "
+                  "total_distance) VALUES (?, ?, ?, ?, ?, ?)",
+                  (distance, 0, 0, 0, 0, 0))
 
     # Save (commit) the changes
     conn.commit()
@@ -607,6 +638,168 @@ def submit_shot():
         print("capt1")
         print("Error submitting shot:", sys.exc_info()[0])
         return 'Error submitting shot', 500
+
+
+@app.route('/user_submit_putt', methods=['POST'])
+def user_submit_putt():
+    print("user_submit_putt() made it capt'n!")
+
+    if 'username' in session:
+        username = session['username']
+        print(f"{username} made it inside user_submit_putt")
+        try:
+            actual_distance = request.form['actual_distance']
+            distance = request.form['distance']
+            direction = request.form['direction']
+            print(f"actual distance: {actual_distance} distance: {distance} direction: {direction}")
+
+            # Get the IP address of the user
+            ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+            # ip_address = request.remote_addr
+            print("Inside INSIDE user_submit_putt dawg")
+            print(f"ip address: {ip_address}")
+
+            # Connect to the database
+            conn = sqlite3.connect(get_user_database_filename(username))
+            c = conn.cursor()
+
+            # Retrieve the values for the selected distance
+            c.execute("SELECT * FROM putts WHERE actual_distance = ?", (actual_distance,))
+            row = c.fetchone()
+
+            if row is None:
+                average_direction = direction
+                hits = 0
+                total_distance = 0
+                average_distance = 0
+            else:
+                average_direction = row[2]
+                hits = row[4]
+                total_distance = row[5]
+                average_distance = row[1]
+
+            # Calculate the new average_direction based on the current average_direction, number of hits, and new direction
+            new_average_direction = (average_direction * hits + direction) / (hits + 1)
+            print(f"new_average_direction: {new_average_direction}")
+            # Calculate the new total_distance and average_distance based on the current total_distance,
+            new_total_distance = total_distance + distance
+            print(f"new_total_distance: {new_total_distance}")
+            new_average_distance = new_total_distance / (hits + 1)
+            print(f"new_average_distance: {new_average_distance}")
+
+            # Increment the hits column by 1 and update the average_direction, total_distance, and average_distance columns
+            if row is None:
+                c.execute(
+                    "INSERT INTO putts (actual_distance, average_distance, average_direction, hits, total_distance) "
+                    "VALUES (?, ?, ?, 1, ?)",
+                    (actual_distance, round(new_average_distance), round(new_average_direction),
+                     new_total_distance))
+            else:
+                c.execute(
+                    "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?"
+                    " WHERE actual_distance = ?",
+                    (round(new_average_direction), new_total_distance, round(new_average_distance),
+                     actual_distance))
+
+            conn.commit()
+            message = "user_submit_putt submitted successfully Capt'n"
+        except:
+            conn.rollback()
+            print("Error updating user_submit_putt:", sys.exc_info()[0])
+            message = "Error UPDATING database: {}".format(sys.exc_info()[0])
+        finally:
+            conn.close()
+
+        return redirect(url_for('range_user'))
+
+    else:
+        return redirect(url_for('login'))
+
+
+
+@app.route('/user_submit_range', methods=['POST'])
+def user_submit_range():
+    print("user_submit_range() made it capt'n!")
+
+    if 'username' in session:
+        username = session['username']
+        print(f"{username} made it inside user_submit_range")
+        try:
+            club = request.form['club']
+            distance = request.form['distance']
+            direction = request.form['direction']
+            print(f"club: {club} distance: {distance} direction: {direction}")
+
+            # Get the IP address of the user
+            ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+            # ip_address = request.remote_addr
+            print("Inside INSIDE user_submit_range dawg")
+            print(f"ip address: {ip_address}")
+
+            # Connect to the database
+            conn = sqlite3.connect(get_user_database_filename(username))
+            c = conn.cursor()
+
+
+            try:
+                # Retrieve the current direction, hits, total_distance, and average_distance values for the selected club
+                c.execute("SELECT * FROM clubs WHERE club = ?", (club,))
+                row = c.fetchone()
+
+                if row is None:
+                    # print("the attempt 2")
+                    current_direction = direction
+                    hits = 0
+                    total_distance = 0
+                    average_distance = 0
+                else:
+                    # print("the attempt 3")
+                    current_direction = row[2]
+                    hits = row[3]
+                    total_distance = row[5]
+                    average_distance = row[7]
+                    # (current_direction,), (hits,), (total_distance,), (average_distance,) = row
+                    print("the attempt 4??")
+
+                # Calculate the new direction based on the current direction, number of hits, and new direction
+                average_direction = (current_direction * hits + int(direction)) / (hits + 1)
+
+                # Calculate the new total_distance and average_distance based on the current total_distance,
+                new_total_distance = total_distance + int(distance)
+                average_distance = new_total_distance / (hits + 1)
+
+                # Increment the hits column by 1 and update the direction, total_distance, and average_distance columns
+                if row is None:
+                    c.execute("INSERT INTO clubs (club, direction, hits, total_distance, average_distance) "
+                              "VALUES (?, ?, 1, ?, ?)", (club, round(average_direction), new_total_distance,
+                                                         round(average_distance)))
+                    # print("row added to database Capt'n")
+
+                else:
+                    c.execute("UPDATE clubs SET hits = hits + 1, direction = ?, total_distance = ?, average_distance = ?"
+                              " WHERE club = ?", (round(average_direction), new_total_distance, round(average_distance),
+                                                  club))
+                    # print("row updated to database Capt'n")
+
+                conn.commit()
+                message = "user_submit_range submitted successfully Capt'n"
+            except:
+                conn.rollback()
+                # print("capt2")
+                print("Error updating user_submit_range:", sys.exc_info()[0])
+                message = "Error UPDATING database: {}".format(sys.exc_info()[0])
+            finally:
+                conn.close()
+
+            return redirect(url_for('range_user'))
+
+        except:
+            print("capt1")
+            print("Error SUBMITTING user_submit_range:", sys.exc_info()[0])
+            return 'Error submitting shot', 500
+
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/end_practice', methods=['POST'])

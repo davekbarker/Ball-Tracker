@@ -3,7 +3,7 @@
   <head>
     <meta name="Author" content="David Barker" />
     <meta name="description" content="All Rights Reserved" />
-    <title> {{ username }}'s Dashboard</title>
+    <title> {{ username }}'s Practice Page</title>
     <style>
       /* Add some styling to make the page look nice */
       body {
@@ -70,30 +70,36 @@
   </head>
   <body>
     <form>
-      <h1>Hello {{ username }}!!</h1>
-      <p>This is your personal dashboard where you will manage your settings.</p>
+      <h1>Where are you practicing?</h1>
+
+      <p></p>
+      <p></p>
 <!--      <br>-->
 <!--      <input type="button" value="Button 1">-->
 <!--      <input type="button" value="Button 2">-->
       <br>
       <br>
 <!--      <input class="home" type="button" value="Home" onclick="location.href='{{ url_for('home') }}'">-->
-      <input class="logOut" type="button" value="Play Golf" onclick="location.href='{{ url_for('logout') }}'">
+<!--      <input class="logOut" type="button" value="Play Golf" onclick="location.href='{{ url_for('logout') }}'">-->
       <br><br>
-      <input class="logOut" type="button" value="Practice" onclick="location.href='{{ url_for('practice_page') }}'">
+      <input class="logOut" type="button" value="Putting Practice" onclick="location.href='{{ url_for('putt_user') }}'">
+      <br><br><br><br>
+      <input class="logOut" type="button" value="Range Time" onclick="location.href='{{ url_for('range_user') }}'">
+      <br><br><br><br><br><br><br>
+      <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
       <br><br>
-      <input class="logOut" type="button" value="Edit Clubs" onclick="location.href='{{ url_for('edit_clubs') }}'">
-      <br><br>
-      <input class="logOut" type="button" value="Personal Stats" onclick="location.href='{{ url_for('dashboard') }}'">
-            <br><br>
-      <input class="logOut" type="button" value="Settings" onclick="location.href='{{ url_for('dashboard') }}'">
-      <br><br><br><br><br><br><br><br>
-<!--      <input class="logOut" type="button" value="Suggestions" onclick="location.href='{{ url_for('dashboard') }}'">-->
-<!--      <br><br>-->
-      <input class="logOut" type="button" value="Log Out" onclick="location.href='{{ url_for('logout') }}'">
-      <div style="clear:both; text-align: center;">
+            <h1>Debug Username: {{ username }}</h1>
+<!--      <input class="logOut" type="button" value="Log Out" onclick="location.href='{{ url_for('logout') }}'">-->
+        <div style="clear:both; text-align: center;">
           © 2023 David Barker. All rights reserved.
       </div>
+
+
+
     </form>
+
   </body>
+  <br>
+
+
 </html>

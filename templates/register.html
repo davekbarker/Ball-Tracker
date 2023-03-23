@@ -20,7 +20,7 @@
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    width: 800px;
+    width: 900px;
     text-align: center;
   }
 
@@ -49,7 +49,7 @@
     border: 1px solid black;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 45px;
     width: 100%;
     margin-bottom: 20px;
   }
@@ -71,7 +71,7 @@
     border: 1px solid black;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 45px;
     width: 45%;
     margin-bottom: 20px;
     float: center;
@@ -95,16 +95,16 @@
     <form action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm();">
 <!--    <form method="POST" action="{{ url_for('register') }}">-->
       <h1>Register</h1>
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name">
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username">
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password">
-      <label for="confirmPassword">Confirm Password:</label>
-      <input type="password" id="confirmPassword" name="confirmPassword">
+<!--      <label for="name">Name:</label>-->
+      <input type="text" id="name" name="name" placeholder="name">
+<!--      <label for="email">Email:</label>-->
+      <input type="text" id="email" name="email" placeholder="email">
+<!--      <label for="username">Username:</label>-->
+      <input type="text" id="username" name="username" placeholder="username">
+<!--      <label for="password">Password:</label>-->
+      <input type="password" id="password" name="password"placeholder="password">
+<!--      <label for="confirmPassword">Confirm Password:</label>-->
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
       <input type="submit" value="Submit">
       <input type="button" value="Home" onclick="location.href='{{ url_for('home') }}'">
       <input type="button" value="Login" onclick="location.href='{{ url_for('login') }}'">

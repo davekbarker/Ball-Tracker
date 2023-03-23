@@ -20,7 +20,7 @@
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    width: 800px;
+    width: 900px;
     text-align: center;
   }
 
@@ -47,7 +47,7 @@
     border: 1px solid black;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 45px;
     width: 100%;
     margin-bottom: 20px;
   }
@@ -67,7 +67,7 @@
     border: 1px solid black;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 45px;
     width: 45%;
     margin-bottom: 20px;
     float: center;
@@ -87,10 +87,10 @@
 
       <form method="POST" action="{{ url_for('login')}}" onsubmit="return validateForm();">
         <h1>Login</h1>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
+<!--        <label for="username">Username:</label>-->
+        <input type="text" id="username" name="username" placeholder="username">
+<!--        <label for="password">Password:</label>-->
+        <input type="password" id="password" name="password" placeholder="password">
         <input type="submit" value="Submit">
         <input type="button" value="Home" onclick="location.href='{{ url_for('home') }}'">
         <input type="button" value="Register" onclick="location.href='{{ url_for('register') }}'">

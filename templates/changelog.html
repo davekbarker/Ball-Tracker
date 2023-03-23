@@ -5,38 +5,83 @@
     <meta name = "description" content= "All Rights Reserved"/>
     <title>Updates for www.trackmyballs.com</title>
     <style>
-
-    .my-button {
+      /* Add some styling to make the page look nice */
+      body {
+        font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
-        background-color: black;
-        border-radius: 25px;
-        color: white;
-        padding: 20px 40px;
-        margin: 0 10px;
-        width: 30%;
-        font-size: 40px;
-    }
+        align-items: center;
+        height: 300vh;
+        background-color: #f2f2f2;
+      }
 
-    .my-button:hover {
+      form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 900px;
+<!--        text-align: center;-->
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 55px;
+      }
+
+
+      /* Add styling for the new buttons */
+      input[type="button"], button {
+        background-color: #000000;
+        color: white;
+        padding: 30px 40px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 45px;
+        width: 40%;
+        margin-bottom: 20px;
+      }
+
+      /* Add hover effect for the new buttons */
+      input[type="button"]:hover, button:hover {
         background-color: white;
         color: black;
-    }
+      }
 
-    h1 {
-<!--        text-align: center;-->
-        padding-left: 15%;
-        font-size: 4rem;
-        margin-top: 2rem;
-    }
+      h1 {
+          text-align: center;
+  <!--        padding-left: 15%;-->
+          font-size: 4rem;
+          margin-top: 2rem;
+      }
+
+
   </style>
   </head>
   <body>
+  <form>
     <h1>Recent Updates</h1>
-    <button class="my-button" onclick="location.href='{{ url_for('home') }}'">Home</button>
+    <br>
+    <button class="my-button" type="button" onclick="location.href='{{ url_for('home') }}'">Home</button>
     <br>
     <br>
     <br>
+    <p><b><u>3-22-23</u></b></p>
+    <p>Average putt per distance is finally calculating correctly and working inline with everything else</p>
+    <p>Changed the user database tables in preparation for changes to how the averages are calculated</p>
+    <p>Linked unused user dashboard pages to the dashboard for the time being</p>
+    <p>Made last change to user database to create values instead of NULL values</p>
+    <p>Confirmed databases and pages thus far are working properly</p>
+    <p>More styling throughout with text and placeholders</p>
+    <p>Fixed username login bug</p>
+    <p>Moved all user database files</p>
+    <p>Moved all Demo Dashboard 2.0 database files</p>
+    <p>Changes uploaded to www.trackmyballs.com</p>
+    <p><b><u>3-21-23</u></b></p>
+    <p>Definitely not halfway done with the putting dashboard....</p>
+    <p>...spent all day trying to push num_putts to the server side</p>
+    <p>No solutions but I have a list of things that do not work</p>
     <p><b><u>3-20-23</u></b></p>
     <p>Adjusted user database to hold several tables</p>
     <p>Set up and completed the user range dashboard</p>
@@ -109,9 +154,11 @@
     <p>Verified functionality of Demo Dashboard 1.0</p>
     <p>Verified all the databases read & write</p>
     <p>Hosted at www.trackmyballs.com</p>
-  </body>
-  <br><br><br><br><br><br>
+    <br><br><br><br><br><br>
     <div style="text-align: center;">
       © 2023 David Barker. All rights reserved.
     </div>
+    </form>
+  </body>
+
 </html>

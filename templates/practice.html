@@ -35,6 +35,12 @@
 <!--        margin-top: 2rem;-->
       }
 
+      .container h4 {
+        text-align: center;
+        font-size: 1.5rem;
+<!--        margin-top: 2rem;-->
+      }
+
       .input-title {
         text-align: center;
         font-size: 2rem;
@@ -107,7 +113,7 @@
         border: none;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 2.5rem;
+        font-size: 45px;
         width: 100% !important;
         margin-bottom: 0 20px;
       }
@@ -160,7 +166,8 @@
   <body>
   <div class="container">
     <h1 id="h1-title">Demo Dashboard 2.0</h1>
-    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>
+    <h2><b>TIME LEFT: <u><span id="time-left"></span></u></b></h2>
+      <h4>Create an account and get rid of the timer!</h4>
     <br>
     <form method="POST" action="{{ url_for('practice_stats') }}" id="shot-form">
         <table id="tableClubDistance">

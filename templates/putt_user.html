@@ -107,7 +107,7 @@
         border: none;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 2.5rem;
+        font-size: 45px;
         width: 100% !important;
         margin-bottom: 0 20px;
       }
@@ -166,7 +166,7 @@
         border: none;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 2.5rem;
+        font-size: 45px;
         width: 100%;
         margin-bottom: 0 20px;
 <!--        width: 100px; /* Adjust this value to the desired width */-->
@@ -175,7 +175,7 @@
       .putt-butts:hover {
         background-color: white;
         color: black;
-<!--        border: 1px solid black;-->
+        border: 1px solid black;
       }
 
     </style>
@@ -183,7 +183,6 @@
   <body>
   <div class="container">
     <h1 id="h1-title">Putting Practice for {{ username }}</h1>
-      <p> Still need to finish putt-butts</p>
 <!--    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>-->
     <br>
     <form method="POST" action="{{ url_for('user_stats') }}" id="shot-form">
@@ -214,17 +213,18 @@
 
 <!--        <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span class="vertical-line">|</span><span style="font-size: 35px;"><b>R</b></span>-->
         <br><br><br><br><br>
-        <input type="submit" value="Submit Shot" class="pract-butts">
+<!--        <input type="submit" value="Submit Shot" class="pract-butts">-->
         <table class="putt-butts-table">
             <tr>
-                <td><button type="button" class="putt-butts" onclick="submitPutt(1)">1 Putt</button></td>
-                <td><button type="button" class="putt-butts" onclick="submitPutt(2)">2 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="1">1 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="2">2 Putt</button></td>
             </tr>
             <tr>
-                <td><button type="button" class="putt-butts" onclick="submitPutt(3)">3 Putt</button></td>
-                <td><button type="button" class="putt-butts" onclick="submitPutt(4)">4 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="3">3 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="4">4 Putt</button></td>
             </tr>
         </table>
+
     </form>
 
     <h1><u>Recent Shots</u></h1>
@@ -261,58 +261,23 @@
     </form>
 <script>
 
-<!--function end_practice() {-->
-<!--  console.log('end_practice()')-->
-<!--  fetch('/end_practice', { method: 'POST' })-->
-<!--    console.log('end_practice() fetch')-->
-<!--    .then(response => {-->
-<!--      if (!response.ok) {-->
-<!--        throw new Error('Failed to clear practice data');-->
-<!--         }-->
-<!--        console.log('end_practice() to home')-->
-<!--        window.location.href = '{{ url_for("home") }}';-->
-<!--      })-->
-<!--       .catch(error => {-->
-<!--         console.error(error);-->
-<!--          alert('Failed to clear practice data');-->
-<!--       });-->
-<!--    }-->
-<!--  window.addEventListener('load', function() {-->
-<!--    console.log('end_practice() load')-->
-<!--    fetch('/end_practice', { method: 'POST' })-->
-<!--      .then(() => refreshPracticeTable());-->
-<!--      console.log('end_practice() method')-->
-<!--});-->
-
-<!--var timeLeft = 300; // 5 minutes in seconds-->
-
-<!--function countdown() {-->
-<!--  var timerElement = document.getElementById("time-left");-->
-<!--  var minutes = Math.floor(timeLeft / 60);-->
-<!--  var seconds = timeLeft % 60;-->
-<!--  var timeString = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');-->
-<!--  timerElement.textContent = timeString;-->
-<!--  timeLeft&#45;&#45;;-->
-<!--  if (timeLeft < 0) {-->
-<!--    clearInterval(countdownTimer);-->
-<!--    alert("Practice has ended!");-->
-<!--    window.location.href = "{{ url_for('home') }}";-->
-<!--  }-->
-<!--}-->
-<!--countdown();-->
-<!--var countdownTimer = setInterval(countdown, 1000);-->
+function setNumPutts(value) {
+  document.getElementById('num_putts').value = value;
+}
 
 function refreshPracticeTable() {
   fetch('/user_stats')
     .then(response => response.json())
     .then(([puttsData, clubsData]) => {
-      console.log('data in an array:')
-      console.log('puttsData in an array:')
+      console.log('data array:')
+      console.log('N/A')
+      console.log('puttsData array:')
       console.log(puttsData)
-      console.log('clubsData in an array:')
+      console.log('clubsData array:')
       console.log(clubsData)
-      console.log('hi')
-      console.log('hi X 2')
+<!--      console.log('hi')-->
+<!--      console.log('hi X 2')-->
+      console.log('tell your friends about http://www.trackmyballs.com')
       const table = document.getElementById('practice-table');
       table.innerHTML = ''; // clear the table rows before inserting new data
       const headerRow = table.insertRow(0);
@@ -340,10 +305,10 @@ function refreshPracticeTable() {
         }
 
         // add console.log statements to log the values
-        console.log('actual_distance:', actual_distance);
-        console.log('average_distance:', average_distance);
-        console.log('average_direction:', average_direction);
-        console.log('average_putts:', average_putts);
+<!--        console.log('actual_distance:', actual_distance);-->
+<!--        console.log('average_distance:', average_distance);-->
+<!--        console.log('average_direction:', average_direction);-->
+<!--        console.log('average_putts:', average_putts);-->
 <!--        console.log('total_distance:', total_distance);-->
 
 
@@ -354,99 +319,45 @@ function refreshPracticeTable() {
     });
 }
 
-
-
-
-
-
-
-<!--function refreshPracticeTable() {-->
-<!--  fetch('/user_stats')-->
-
-<!--    .then(response => response.json())-->
-<!--    .then(([puttsData, clubsData]) => {-->
-<!--      console.log('data in an array:')-->
-<!--      console.log('puttsData in an array:')-->
-<!--      console.log(puttsData)-->
-<!--      console.log('clubsData in an array:')-->
-<!--      console.log(clubsData)-->
-<!--      console.log('hi')-->
-<!--      console.log('hi X 2')-->
-<!--      const table = document.getElementById('practice-table');-->
-<!--      table.innerHTML = ''; // clear the table rows before inserting new data-->
-<!--      const headerRow = table.insertRow(0);-->
-<!--      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Average Distance</th><th>Total Distance</th>';-->
-
-<!--      clubsData.forEach(rowData => {-->
-<!--        const id = rowData[0];-->
-<!--        const club = rowData[1];-->
-<!--        const direction = rowData[2];-->
-<!--        const hits = rowData[3];-->
-<!--        const distance = rowData[4];-->
-<!--        const total_distance = rowData[5];-->
-<!--        const total_hits = rowData[6];-->
-<!--        const average_distance = rowData[7];-->
-<!--        const row = table.insertRow(-1);-->
-
-<!--        // get all the range-slide input elements-->
-<!--        const rangeSlides = document.getElementsByClassName('range-slide');-->
-
-<!--        // loop through each input element and add an event listener to log its value when it changes-->
-<!--        for (let i = 0; i < rangeSlides.length; i++) {-->
-<!--            rangeSlides[i].addEventListener('change', (event) => {-->
-<!--                console.log(`range slide ${i} value: ${event.target.value}`);-->
-<!--            });-->
-<!--        }-->
-
-<!--        // add console.log statements to log the values-->
-<!--        console.log('club:', club);-->
-<!--        console.log('direction:', direction);-->
-<!--        console.log('hits:', hits);-->
-<!--        console.log('average_distance:', average_distance);-->
-<!--        console.log('total_distance:', total_distance);-->
-
-
-<!--&lt;!&ndash;        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;&ndash;&gt;-->
-<!--        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
-
-<!--      });-->
-<!--    });-->
-<!--}-->
-
-
-
-
-
-
 // Call the refreshPracticeTable() function when the page loads
 document.addEventListener('DOMContentLoaded', refreshPracticeTable);
 
 // Call the refreshPracticeTable() function after submitting a shot
 const form = document.getElementById('shot-form');
-form.addEventListener('submit', event => {
-  console.log('submit event')
+form.addEventListener('submit', user_submit_putt);
+
+function user_submit_putt(event) {
+  console.log('submit event');
+  const value = event.submitter.value;
+
   event.preventDefault(); // prevent form submission
+
+  const numPuttsValue = event.submitter.value;
+  console.log(`num_putts value: ${numPuttsValue}`);
 
   const distanceInput = document.getElementById('distance');
   const distanceValue = distanceInput.value;
 
-  console.log('distance input: ${distanceInput}')
-  console.log('distance value: ${distanceValue}')
+  console.log(`distance value: ${distanceInput.value}`);
+  console.log(`distance input: ${distanceValue}`);
 
   if (distanceValue === '' || distanceValue === '0') {
     alert("It doesn't count if your ball stays in the tee box!");
     return;
   }
 
+<!--  console.log(`putt value: ${numPuttsValue}`);-->
+
   const formData = new FormData(event.target);
+  formData.set('num_putts', numPuttsValue); // Set the num_putts value in the FormData
 
   fetch('/user_submit_putt', { method: 'POST', body: formData })
     .then(() => {
-    console.log('user_submit_putt called')
-<!--      distanceInput.value = ''; // clear the distance input after submission-->
+      console.log('user_submit_putt called');
+      console.log(`num_putts input: ${numPuttsValue}`);
       refreshPracticeTable();
     });
-});
+}
 
 </script>
         </div>

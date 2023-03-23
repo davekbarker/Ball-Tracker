@@ -75,6 +75,7 @@ def teardown_cursor(exception):
 @app.route("/index")
 def index():
     # 2 '..' for droplet
+
     # connection = sqlite3.connect("../mydatabase.db")
     connection = sqlite3.connect("./mydatabase.db")
     cursor = connection.cursor()
@@ -96,8 +97,10 @@ def wrongUser():
 
 @app.route('/range_time')
 def range_time():
+    # 2 '..' for droplet
+
     # Connect to clubs.db
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+    # conn = sqlite3.connect('../clubs.db')
     conn = sqlite3.connect('./clubs.db')
     c = conn.cursor()
 
@@ -145,9 +148,13 @@ def submit_direction():
 
 @app.route('/current_stats')
 def current_stats():
+    # 2 '..' for droplet
+
+    # Connect to clubs.db
+    # conn = sqlite3.connect('../clubs.db')
     conn = sqlite3.connect('./clubs.db')
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
     c = conn.cursor()
+
     c.execute("SELECT name, direction, distance, hits FROM golf_clubs")
     rows = c.fetchall()
     conn.close()
@@ -156,7 +163,10 @@ def current_stats():
 
 @app.route('/clear_stats', methods=['GET', 'POST'])
 def clear_stats():
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+    # 2 '..' for droplet
+
+    # Connect to clubs.db
+    # conn = sqlite3.connect('../clubs.db')
     conn = sqlite3.connect('./clubs.db')
     c = conn.cursor()
 
@@ -187,7 +197,8 @@ def register():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirmPassword']
-        print(name, username, email, password, ip_address, confirm_password)
+        # print(name, username, email, password, ip_address, confirm_password)
+        # print(f"password: {password}")
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
@@ -197,11 +208,13 @@ def register():
         # # Connect to database.db
         # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
         # c = conn.cursor()
-        print(f"{username}.db")
+        print(f"Database file name: {username}.db")
         # db_file = os.path.join('/Users/Dave/PycharmProjects/mydatabase', f"{username}.db")
         # db_file = os.path.join('/Users/Dave/golfers', username, f"{username}.db")
-        db_file = f"{username}.db"
+        db_file = f"{get_user_database_filename(username)}"
         # conn = sqlite3.connect(db_file)
+        print(f"Database location: {get_user_database_filename(username)}")
+        print(db_file)
 
         # Get the absolute path of the file
         # db_file_path = os.path.abspath(db_file)
@@ -216,19 +229,7 @@ def register():
         else:
             # If user database file does not exist, create a new one for the user
             print(f"Creating database for user: {username}")
-            # ##### conn = sqlite3.connect(db_file) ######
             print(f"Database in progress for user: {username}")
-            # c = conn.cursor()
-
-            # Create the users table in the database
-            # ##### conn.execute('''CREATE TABLE IF NOT EXISTS users
-            # #####              (name text, username text, email text, password blob, ip_address integer)''')
-            # ##### conn.commit()
-            # print(f"Database being assembled for user: {username}")
-            # # Insert new user into database
-            # ##### conn.execute("INSERT INTO users (name, username, email, password, ip_address) VALUES (?, ?, ?, ?, ?)",
-            # #####              (name, username, email, hashed_password, ip_address))
-            # ##### conn.commit()
             print(f"Database assembled for user: {username}")
 
             # Not sure about this code.......
@@ -256,11 +257,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        if os.path.isfile(f"{username}.db"):
+        if os.path.isfile(f"{get_user_database_filename(username)}"):
             print(f"Accessing database for user: {username}")
-            conn = sqlite3.connect(f"{username}.db")
-            print(f"Accessed database for user: {username}")
-            print(f"Username: {username} Password: {password}")
+            conn = sqlite3.connect(get_user_database_filename(username))
+            # conn = sqlite3.connect(f"{username}.db")
+
+            print(f"Accessed database: {get_user_database_filename(username)}")
+            # print(f"Username: {username} Password: {password}")
             c = conn.cursor()
 
             # ***** There is still a bug right here..... if you access a .db without a 'users' table it will crash ****
@@ -269,7 +272,7 @@ def login():
             # c.execute("SELECT password FROM users WHERE username=?", (username,))
             c.execute("SELECT * FROM user WHERE username=?", (username,))
             result = c.fetchone()
-
+            print(f"result: {result[3]}")
             if result:
                 print("inside IF")
                 # Verify password using the stored hash
@@ -327,6 +330,16 @@ def range_user():
 
 
         # return render_template('range_user.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/play_golf_user')
+def play_golf_user():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('play_golf_user.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -398,15 +411,15 @@ def logout():
 def get_user_database_filename(username):
     # will most likely need to change to '..' deployed
     # return f'./user_{user_id}.db'
-    return f'{username}.db'
+    return f'./golfers/{username}.db'
 
 
 def get_database_filename(ip_address):
     # will most likely need to change to '..' deployed
-    return f'./practice.{ip_address}.db'
+    return f'./practice.dashboard/practice.{ip_address}.db'
 
 
-def create_user_database(username, name, email, hashed_password, ip_address):
+def create_user_database(name, username, email, hashed_password, ip_address):
     conn = sqlite3.connect(get_user_database_filename(username))
     c = conn.cursor()
 
@@ -421,7 +434,7 @@ def create_user_database(username, name, email, hashed_password, ip_address):
     c.execute("INSERT INTO user (name, username, email, password, ip_address) \
                VALUES (?, ?, ?, ?, ?)", (name, username, email, hashed_password, ip_address))
 
-    # Create the table
+    # Create the clubs table
     c.execute('''CREATE TABLE clubs
              (id INTEGER NOT NULL,
              club TEXT PRIMARY KEY,
@@ -431,27 +444,33 @@ def create_user_database(username, name, email, hashed_password, ip_address):
              total_distance INTEGER NOT NULL DEFAULT 0,
              total_hits INTEGER NOT NULL DEFAULT 0,
              average_distance INTEGER NOT NULL DEFAULT 0,
-             username TEXT)''')
+             username TEXT,
+             ''' + ','.join([f"hit_{i} INTEGER" for i in range(1, 16)]) + ')')
 
     clubs = ['Driver', 'Wood', 'Hybrid', 'Iron', 'Wedge']
     for i, club in enumerate(clubs):
         c.execute("INSERT INTO clubs (id, club, direction, hits, distance, total_distance, total_hits, "
-                  "average_distance, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                  (i + 1, club, 0, 0, 0, 0, 0, 0, username))
+                  "average_distance, username, " + ','.join([f"hit_{i}" for i in range(1, 16)]) + ") "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + ','.join(['?'] * 15) + ")",
+                  (i + 1, club, 0, 0, 0, 0, 0, 0, username, *([0] * 15)))
 
+    # Create the putts table
     c.execute('''CREATE TABLE putts
                  (actual_distance INTEGER PRIMARY KEY,
                   average_distance INTEGER NOT NULL DEFAULT 0,
                   average_direction INTEGER NOT NULL DEFAULT 0,
                   average_putts INTEGER NOT NULL DEFAULT 0,
                   hits INTEGER NOT NULL DEFAULT 0,
-                  total_distance NOT NULL DEFAULT 0)''')
+                  total_distance INTEGER NOT NULL DEFAULT 0,
+                  username TEXT,
+                  ''' + ','.join([f"hit_{i} INTEGER" for i in range(1, 16)]) + ')')
 
-    distances = [1, 3, 5, 8, 10, 13, 15, 18, 20]
+    distances = [2, 4, 6, 8, 10, 13, 15, 18, 20]
     for distance in distances:
         c.execute("INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, "
-                  "total_distance) VALUES (?, ?, ?, ?, ?, ?)",
-                  (distance, 0, 0, 0, 0, 0))
+                  "total_distance, username, " + ','.join([f"hit_{i}" for i in range(1, 16)]) + ") "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, " + ','.join(['?'] * 15) + ")",
+                  (distance, 0, 0, 0, 0, 0, username, *([0] * 15)))
 
     # Save (commit) the changes
     conn.commit()
@@ -651,7 +670,8 @@ def user_submit_putt():
             actual_distance = request.form['actual_distance']
             distance = request.form['distance']
             direction = request.form['direction']
-            print(f"actual distance: {actual_distance} distance: {distance} direction: {direction}")
+            num_putts = request.form['num_putts']
+            print(f"actual distance: {actual_distance} distance: {distance} direction: {direction} num_putts: {num_putts}")
 
             # Get the IP address of the user
             ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -662,44 +682,60 @@ def user_submit_putt():
             # Connect to the database
             conn = sqlite3.connect(get_user_database_filename(username))
             c = conn.cursor()
+            # print("made it before SELECT")
 
             # Retrieve the values for the selected distance
             c.execute("SELECT * FROM putts WHERE actual_distance = ?", (actual_distance,))
             row = c.fetchone()
-
+            # print("made it after SELECT")
             if row is None:
                 average_direction = direction
                 hits = 0
                 total_distance = 0
                 average_distance = 0
+                average_putts = num_putts
             else:
                 average_direction = row[2]
                 hits = row[4]
                 total_distance = row[5]
                 average_distance = row[1]
+                average_putts = row[3]
 
             # Calculate the new average_direction based on the current average_direction, number of hits, and new direction
-            new_average_direction = (average_direction * hits + direction) / (hits + 1)
+            new_average_direction = (average_direction * hits + int(direction)) / (hits + 1)
             print(f"new_average_direction: {new_average_direction}")
+
             # Calculate the new total_distance and average_distance based on the current total_distance,
-            new_total_distance = total_distance + distance
+            new_total_distance = total_distance + int(distance)
             print(f"new_total_distance: {new_total_distance}")
             new_average_distance = new_total_distance / (hits + 1)
             print(f"new_average_distance: {new_average_distance}")
 
+            # Calculate the new average_putts based on the current average_putts, number of hits, and new num_putts
+            new_average_putts = (average_putts * hits + int(num_putts)) / (hits + 1)
+            print(f"new_average putts: {new_average_putts}")
+
+            # # Increment the hits column by 1 and update the average_direction, total_distance, and average_distance columns
+            # if row is None:
+            #     c.execute(
+            #         "INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, total_distance) "
+            #         "VALUES (?, ?, ?, 1, ?)",
+            #         (actual_distance, round(new_average_distance), round(new_average_direction),
+            #          round(new_average_putts), new_total_distance))
+            # else:
+            #     c.execute(
+            #         "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?, average_putts = ?"
+            #         " WHERE actual_distance = ?",
+            #         (round(new_average_direction), new_total_distance, round(new_average_distance),
+            #          round(new_average_putts), actual_distance))
+
             # Increment the hits column by 1 and update the average_direction, total_distance, and average_distance columns
-            if row is None:
-                c.execute(
-                    "INSERT INTO putts (actual_distance, average_distance, average_direction, hits, total_distance) "
-                    "VALUES (?, ?, ?, 1, ?)",
-                    (actual_distance, round(new_average_distance), round(new_average_direction),
-                     new_total_distance))
-            else:
-                c.execute(
-                    "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?"
-                    " WHERE actual_distance = ?",
-                    (round(new_average_direction), new_total_distance, round(new_average_distance),
-                     actual_distance))
+            c.execute(
+                "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?, average_putts = ?"
+                " WHERE actual_distance = ?",
+                (
+                round(new_average_direction), new_total_distance, round(new_average_distance), round(new_average_putts),
+                actual_distance))
 
             conn.commit()
             message = "user_submit_putt submitted successfully Capt'n"
@@ -714,7 +750,6 @@ def user_submit_putt():
 
     else:
         return redirect(url_for('login'))
-
 
 
 @app.route('/user_submit_range', methods=['POST'])

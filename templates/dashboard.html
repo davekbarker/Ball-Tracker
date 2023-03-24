@@ -71,9 +71,11 @@
   <body>
     <form>
       <h1>Hello {{ username }}!!</h1>
-      <p><b>This is your personal dashboard where you will manage your settings.<br>
-      It is a work in progress, check back often for updates!<br><br>
-      <u>Stats button currently goes nowhere</u></b></p>
+      <h3><b>This is your personal dashboard where you will manage your settings.<br><br>
+      <u>Check back often for updates! We currently have several updates a week.</u><br><br>
+
+      </h3>
+<!--      <u>Stats button currently goes nowhere</u></b></h3>-->
 <!--      <br>-->
 <!--      <input type="button" value="Button 1">-->
 <!--      <input type="button" value="Button 2">-->
@@ -85,8 +87,8 @@
       <input class="logOut" type="button" value="Practice" onclick="location.href='{{ url_for('practice_page') }}'">
       <br><br>
       <input class="logOut" type="button" value="Edit Clubs" onclick="location.href='{{ url_for('edit_clubs') }}'">
-      <br><br>
-      <input class="logOut" type="button" value="Stats" onclick="location.href='{{ url_for('dashboard') }}'">
+<!--      <br><br>-->
+<!--      <input class="logOut" type="button" value="Stats" onclick="location.href='{{ url_for('dashboard') }}'">-->
 <!--            <br><br>-->
 <!--      <input class="logOut" type="button" value="Settings" onclick="location.href='{{ url_for('dashboard') }}'">-->
       <br><br><br><br><br><br><br><br>

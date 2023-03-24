@@ -120,7 +120,10 @@ def submit_direction():
     if request.method == 'POST':
         club_id = int(request.form['club_name'])
         new_direction = int(request.form['direction'])
-        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/clubs.db')
+        # 2 '..' for droplet
+
+        # Connect to clubs.db
+        # conn = sqlite3.connect('../clubs.db')
         conn = sqlite3.connect('./clubs.db')
         c = conn.cursor()
 
@@ -371,7 +374,7 @@ def putt_user():
         return redirect(url_for('login'))
 
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'username' in session:
         username = session['username']
@@ -387,6 +390,26 @@ def practice_page():
         username = session['username']
         print(f"Session: {session}")
         return render_template('practice_page.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/clear_data_success')
+def clear_data_success():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('clear_data_success.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/clear_values')
+def clear_values():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('clear_values.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -692,50 +715,86 @@ def user_submit_putt():
                 average_direction = direction
                 hits = 0
                 total_distance = 0
-                average_distance = 0
-                average_putts = num_putts
+                # average_distance = 0
+                # average_putts = num_putts
+                distances = []
+                directions = []
+                putts = []
             else:
-                average_direction = row[2]
+                # average_direction = row[2]
                 hits = row[4]
                 total_distance = row[5]
-                average_distance = row[1]
-                average_putts = row[3]
+                distances = [row[i] for i in range(7, 12)]
+                directions = [row[i] for i in range(12, 17)]
+                putts = [row[i] for i in range(17, 22)]
+                # average_distance = row[1]
+                # average_putts = row[3]
+                print(f"directions: {directions}")
+                print(f"distances: {distances}")
+                print(f"putts: {putts}")
+                print(f"directions length: {len(directions)}")
+                print(f"distances length: {len(distances)}")
+                print(f"putts length: {len(putts)}")
+                print("dawgZ")
+
+            directions.insert(0, int(direction))
+            if len(directions) > 5:
+                directions.pop()
+            average_direction = sum(directions) / len(directions)
 
             # Calculate the new average_direction based on the current average_direction, number of hits, and new direction
-            new_average_direction = (average_direction * hits + int(direction)) / (hits + 1)
-            print(f"new_average_direction: {new_average_direction}")
+            # new_average_direction = (average_direction * hits + int(direction)) / (hits + 1)
+            print(f"average_direction: {average_direction}")
 
             # Calculate the new total_distance and average_distance based on the current total_distance,
             new_total_distance = total_distance + int(distance)
             print(f"new_total_distance: {new_total_distance}")
-            new_average_distance = new_total_distance / (hits + 1)
-            print(f"new_average_distance: {new_average_distance}")
 
-            # Calculate the new average_putts based on the current average_putts, number of hits, and new num_putts
-            new_average_putts = (average_putts * hits + int(num_putts)) / (hits + 1)
-            print(f"new_average putts: {new_average_putts}")
+            distances.insert(0, int(distance))
+            if len(distances) > 5:
+                distances.pop()
+            average_distance = sum(distances) / len(distances)
 
-            # # Increment the hits column by 1 and update the average_direction, total_distance, and average_distance columns
-            # if row is None:
-            #     c.execute(
-            #         "INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, total_distance) "
-            #         "VALUES (?, ?, ?, 1, ?)",
-            #         (actual_distance, round(new_average_distance), round(new_average_direction),
-            #          round(new_average_putts), new_total_distance))
-            # else:
-            #     c.execute(
-            #         "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?, average_putts = ?"
-            #         " WHERE actual_distance = ?",
-            #         (round(new_average_direction), new_total_distance, round(new_average_distance),
-            #          round(new_average_putts), actual_distance))
+            # new_average_distance = new_total_distance / (hits + 1)
+            print(f"average_distance: {average_distance}")
 
-            # Increment the hits column by 1 and update the average_direction, total_distance, and average_distance columns
-            c.execute(
-                "UPDATE putts SET hits = hits + 1, average_direction = ?, total_distance = ?, average_distance = ?, average_putts = ?"
-                " WHERE actual_distance = ?",
-                (
-                round(new_average_direction), new_total_distance, round(new_average_distance), round(new_average_putts),
-                actual_distance))
+            putts.insert(0, int(num_putts))
+            if len(putts) > 5:
+                putts.pop()
+            average_putts = sum(putts) / len(putts)
+
+            # Update the database
+            if row is None:
+                distance_columns = ', '.join(f'hit_{i + 1}' for i in range(5))
+                direction_columns = ', '.join(f'hit_{i + 6}' for i in range(5))
+                putts_columns = ', '.join(f'hit_{i + 11}' for i in range(5))
+
+                c.execute(
+                    f"INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, {distance_columns}, {direction_columns}, {putts_columns})"
+                    f" VALUES (?, ?, ?, ?, 1, {', '.join(['?'] * 15)})", (
+                    actual_distance, round(average_distance), round(average_direction), round(average_putts),
+                    *distances, *directions, *putts))
+            else:
+                distance_columns = ', '.join(f'hit_{i + 1} = ?' for i in range(5))
+                direction_columns = ', '.join(f'hit_{i + 6} = ?' for i in range(5))
+                putts_columns = ', '.join(f'hit_{i + 11} = ?' for i in range(5))
+
+                # update_query = update_query.replace("?, ,", "?,")
+
+                # print("UPDATE query:", update_query)
+                # print("average_distance:", round(average_distance))
+                # print("average_direction:", round(average_direction))
+                # print("average_putts:", round(average_putts))
+                # print("distances:", *distances)
+                # print("directions:", *directions)
+                # print("putts:", *putts)
+                # print("actual_distance:", actual_distance)
+                update_query = f"UPDATE putts SET hits = hits + 1, average_distance = ?, average_direction = ?, " \
+                               f"average_putts = ?, {distance_columns}, {direction_columns}, {putts_columns} " \
+                               f"WHERE actual_distance = ?".replace(", ,", ",")
+                c.execute(update_query, (
+                round(average_distance), round(average_direction), round(average_putts), *distances, *directions,
+                *putts, actual_distance))
 
             conn.commit()
             message = "user_submit_putt submitted successfully Capt'n"
@@ -787,33 +846,64 @@ def user_submit_range():
                     hits = 0
                     total_distance = 0
                     average_distance = 0
+                    # New
+                    distances = []
+                    directions = []
                 else:
                     # print("the attempt 3")
                     current_direction = row[2]
                     hits = row[3]
                     total_distance = row[5]
                     average_distance = row[7]
-                    # (current_direction,), (hits,), (total_distance,), (average_distance,) = row
-                    print("the attempt 4??")
 
+                    # New
+                    directions = [row[i] for i in range(9, 16)]
+                    distances = [row[i] for i in range(17, 23)]
+                    # print("the attempt 4??")
+                    # print(f"directions: {directions}")
+                    # print(f"distances: {distances}")
+                    # print(f"directions length: {len(directions)}")
+                    # print(f"distances length: {len(distances)}")
+                    # print("dawgZ")
+
+                # Calculate the new direction based on the last 8 directions
+                directions.insert(0, int(direction))
+                if len(directions) > 8:
+                    directions.pop()
+                average_direction = sum(directions) / len(directions)
+
+                # Calculate the new total_distance and average_distance based on the last 7 distances
+                distances.insert(0, int(distance))
+                if len(distances) > 7:
+                    distances.pop()
+                average_distance = sum(distances) / len(distances)
+
+                # THIS IS THE OLD WAY::
                 # Calculate the new direction based on the current direction, number of hits, and new direction
-                average_direction = (current_direction * hits + int(direction)) / (hits + 1)
-
-                # Calculate the new total_distance and average_distance based on the current total_distance,
-                new_total_distance = total_distance + int(distance)
-                average_distance = new_total_distance / (hits + 1)
+                # average_direction = (current_direction * hits + int(direction)) / (hits + 1)
+                #
+                # # Calculate the new total_distance and average_distance based on the current total_distance,
+                # new_total_distance = total_distance + int(distance)
+                # average_distance = new_total_distance / (hits + 1)
 
                 # Increment the hits column by 1 and update the direction, total_distance, and average_distance columns
                 if row is None:
                     c.execute("INSERT INTO clubs (club, direction, hits, total_distance, average_distance) "
-                              "VALUES (?, ?, 1, ?, ?)", (club, round(average_direction), new_total_distance,
+                              "VALUES (?, ?, 1, ?, ?)", (club, round(average_direction), sum(distances),
                                                          round(average_distance)))
                     # print("row added to database Capt'n")
 
                 else:
-                    c.execute("UPDATE clubs SET hits = hits + 1, direction = ?, total_distance = ?, average_distance = ?"
-                              " WHERE club = ?", (round(average_direction), new_total_distance, round(average_distance),
-                                                  club))
+                    hit_columns = ', '.join(f'hit_{i + 1} = ?' for i in range(15))
+                    c.execute(
+                        f"UPDATE clubs SET hits = hits + 1, direction = ?, total_distance = ?, average_distance = ?, {hit_columns} WHERE club = ?",
+                        (round(average_direction), sum(distances), round(average_distance), *directions, *distances,
+                         club))
+
+                    # OLD WAY
+                    # c.execute("UPDATE clubs SET hits = hits + 1, direction = ?, total_distance = ?, average_distance = ?"
+                    #           " WHERE club = ?", (round(average_direction), sum(distances), round(average_distance),
+                    #                               club))
                     # print("row updated to database Capt'n")
 
                 conn.commit()
@@ -837,6 +927,119 @@ def user_submit_range():
         return redirect(url_for('login'))
 
 
+@app.route('/user_clear_putts', methods=['POST'])
+def user_clear_putts():
+    print("clearing putts table")
+
+    if 'username' in session:
+        username = session['username']
+        print(f"{username} made it inside user_clear_putts")
+
+        # Get the IP address of the user
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # ip_address = request.remote_addr
+        print("Inside end_practice() dawg")
+        print(f"ip address: {ip_address}")
+
+        # Connect to the database
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        # This resets everything back to 0
+        # This also causes a glitch for the first 5 values.
+        # c.execute("""
+        #     UPDATE putts
+        #     SET average_distance = 0,
+        #         average_direction = 0,
+        #         average_putts = 0,
+        #         hits = 0,
+        #         total_distance = 0,
+        #         """ + ','.join([f"hit_{i} = 0" for i in range(1, 16)]) + """
+        #     WHERE username = ?
+        #     """, (username,))
+
+        # This sets the average direction to 50
+        c.execute("""
+            UPDATE putts
+            SET average_distance = 0,
+                average_direction = 0,
+                average_putts = 0,
+                hits = 0,
+                total_distance = 0,
+                """ + ','.join([f"hit_{i} = 0" for i in range(1, 16)]) + ',' + ','.join(
+            [f"hit_{i} = 50" for i in range(6, 11)]) + """
+            WHERE username = ?
+            """, (username,))
+
+        # What we are changing, notes only
+        # directions = [row[i] for i in range(12, 17)]
+
+        # c.execute("UPDATE putts SET average_distance = 0, average_direction = 0, average_putts = 0, hits = 0, total_distance = 0, hit_1 = 0, hit_2 = 0, hit_3 = 0, hit_4 = 0, hit_5 = 0, hit_6 = 0, hit_7 = 0, hit_8 = 0, hit_9 = 0, hit_10 = 0, hit_11 = 0, hit_12 = 0, hit_13 = 0, hit_14 = 0, hit_15 = 0 WHERE username = ?",
+        #           (username,))
+
+        conn.commit()
+        conn.close()
+        return redirect('clear_data_success')
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/user_clear_clubs', methods=['POST'])
+def user_clear_clubs():
+    print("clearing putts table")
+
+    if 'username' in session:
+        username = session['username']
+        print(f"{username} made it inside user_clear_putts")
+
+        # Get the IP address of the user
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # ip_address = request.remote_addr
+        print("Inside end_practice() dawg")
+        print(f"ip address: {ip_address}")
+
+        # Connect to the database
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        # This resets everything back to 0
+        # This also causes a glitch for the first 5 values.
+        # c.execute("""
+        #     UPDATE clubs
+        #     SET direction = 0,
+        #         hits = 0,
+        #         distance = 0,
+        #         total_distance = 0,
+        #         total_hits = 0,
+        #         average_distance = 0,
+        #         """ + ','.join([f"hit_{i} = 0" for i in range(1, 16)]) + """
+        #     WHERE username = ?
+        #     """, (username,))
+
+        # This resets the average direction back to 50
+        c.execute("""
+            UPDATE clubs
+            SET direction = 0,
+                hits = 0,
+                distance = 0,
+                total_distance = 0,
+                total_hits = 0,
+                average_distance = 0,
+                """ + ','.join([f"hit_{i} = 50" for i in range(1, 9)]) + ',' + ','.join(
+            [f"hit_{i} = 0" for i in range(9, 16)]) + """
+            WHERE username = ?
+            """, (username,))
+
+        # The values we are changing, notes only:
+        # directions = [row[i] for i in range(9, 16)]
+
+        conn.commit()
+        conn.close()
+        return redirect('clear_data_success')
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/end_practice', methods=['POST'])
 def end_practice():
 
@@ -854,11 +1057,9 @@ def end_practice():
     conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
 
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    # conn = sqlite3.connect('./practice.db')
-    # c = conn.cursor()
     c.execute("UPDATE practice SET direction = 0, distance = 0, hits = 0, total_distance = 0, total_hits = 0, "
               "average_distance = 0")
+
     conn.commit()
     conn.close()
     return redirect('/')
@@ -880,13 +1081,10 @@ def practice_stats():
     conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
 
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    # conn = sqlite3.connect('./practice.db')
-    # c = conn.cursor()
-    # c.execute("SELECT club, hits, total_distance, average_distance, direction FROM practice")
     c.execute("SELECT * FROM practice")
     print("capt practice_stats")
     practice_data = c.fetchall()
+
     # print(practice_data)
     conn.close()
     print("practice_stats 2")
@@ -919,7 +1117,6 @@ def user_stats():
         return jsonify(user_putt_data, user_club_data)
     else:
         return redirect(url_for('login'))
-
 
 
 if __name__ == '__main__':

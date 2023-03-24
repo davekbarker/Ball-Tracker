@@ -423,22 +423,18 @@ def logout():
     return redirect(url_for('home'))
 
 
-# @app.route('/dashboard')
-# def dashboard():
-#     # username = current_user.username
-#     # return render_template('dashboard.html', username=username)
-#     return render_template('dashboard.html')
-
-
 # NOT USED CAPT'N <--- These are lies
 def get_user_database_filename(username):
-    # will most likely need to change to '..' deployed
-    # return f'./user_{user_id}.db'
+    # 2 '..' for droplet
+
+    # return f'../golfers/{username}.db'
     return f'./golfers/{username}.db'
 
 
 def get_database_filename(ip_address):
-    # will most likely need to change to '..' deployed
+    # 2 '..' for droplet
+
+    # return f'../practice.dashboard/practice.{ip_address}.db'
     return f'./practice.dashboard/practice.{ip_address}.db'
 
 

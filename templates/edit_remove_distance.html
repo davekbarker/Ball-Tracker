@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit or Remove Distance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+
+        form {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 55px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            background-color: #000000;
+            color: white;
+            padding: 50px 60px;
+            border: 1px solid black;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h1>Which would you like to do?</h1>
+        <div class="buttons-container">
+            <br><br><br>
+            <button id="edit-distance" type="button">Edit Distance: {{ distance }}</button>
+            <br>
+            <button id="remove-distance">Remove Distance: {{ distance }}</button>
+            <br><br><br><br><br>
+            <button id="back-to-edit-putts" type="button">Back to Putts</button>
+        </div>
+
+        <script>
+            document.getElementById('edit-distance').addEventListener('click', () => {
+                window.location.href = "{{ url_for('edit_distance_user', distance=distance, username=username) }}";
+            });
+
+            document.getElementById('remove-distance').addEventListener('click', async () => {
+                // Ask for confirmation
+                if (!confirm('Are you sure you want to delete this distance?')) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/remove_distance', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({ distance: '{{ distance }}' }),
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.result === 'success') {
+                            alert('Distance removed successfully');
+                            window.location.href = "{{ url_for('edit_putts') }}";
+                        } else {
+                            alert('Error removing distance: ' + result.message);
+                        }
+                    } else {
+                        alert('Error removing distance: ' + response.statusText);
+                    }
+                } catch (error) {
+                    alert('Error removing distance: ' + error);
+                }
+            });
+
+            document.getElementById('back-to-edit-putts').addEventListener('click', () => {
+                console.log('Back to Distances button clicked');
+                window.location.href = "{{ url_for('edit_putts') }}";
+            });
+        </script>
+        <div style="text-align: center;">
+            © 2023 David Barker. All rights reserved.
+        </div>
+    </form>
+</body>
+</html>

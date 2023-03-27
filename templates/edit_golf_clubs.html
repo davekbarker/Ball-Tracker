@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="Author" content="David Barker" />
+    <meta name="description" content="All Rights Reserved" />
+    <title>Edit {{ username }}'s Golf Bag</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f2f2f2;
+        padding: 20px;
+      }
+
+      form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 900px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 55px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 20px;
+      }
+
+      /* Add styling for the new buttons */
+      button {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 95%;
+      }
+
+      /* Add hover effect for the new buttons */
+      button:hover {
+        background-color: white;
+        color: black;
+      }
+
+            /* Add styling for the new buttons */
+      input[type="button"] {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 95%;
+        margin-bottom: 20px;
+      }
+
+      /* Add hover effect for the new buttons */
+      input[type="button"]:hover {
+        background-color: white;
+        color: black;
+      }
+    </style>
+</head>
+<body>
+    <form>
+        <h1>Edit {{ username }}'s Golf Bag</h1>
+        <h2><b>Select a club to edit</b></h2>
+        <br>
+        <ul id="clubs-container">
+            <!-- Club buttons will be added here by JavaScript -->
+        </ul>
+        <br><br><br>
+        <input class="logOut" type="button" value="Add Club" onclick="location.href='{{ url_for('add_club_user') }}'">
+        <div style="clear:both; text-align: center;">
+        </div>
+        <br><br><br><br><br><br><br>
+        <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+        <div style="clear:both; text-align: center;">
+          © 2023 David Barker. All rights reserved.
+        </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const clubsContainer = document.getElementById('clubs-container');
+
+            try {
+                const response = await fetch('/get_clubs');
+                if (response.ok) {
+                    const data = await response.json();
+                    const clubs = data.clubs;
+
+                    clubs.forEach(club => {
+                        const li = document.createElement('li');
+                        const clubButton = document.createElement('button');
+                        clubButton.textContent = club;
+                        clubButton.onclick = (event) => {
+                            event.preventDefault();
+                            window.location.href = `/edit_remove_club/${encodeURIComponent(club)}`;
+                        };
+                        li.appendChild(clubButton);
+                        clubsContainer.appendChild(li);
+                    });
+                } else {
+                    console.error('Error fetching clubs:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching clubs:', error);
+            }
+        });
+    </script>
+</body>
+</html>

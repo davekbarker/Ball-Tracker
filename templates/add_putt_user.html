@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Club</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f2f2;
+      }
+
+      form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 900px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 55px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 20px;
+      }
+
+      /* Add styling for the new buttons */
+      button {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 100%;
+      }
+
+      /* Add hover effect for the new buttons */
+      button:hover {
+        background-color: white;
+        color: black;
+      }
+
+      input[type="text"],
+        input[type="password"] {
+        width: 90%;
+        padding: 50px 50px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        font-size: 55px;
+        text-align: center;
+      }
+
+      /* Add styling for the new buttons */
+      input[type="button"] {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 100%;
+
+
+      }
+
+      /* Add hover effect for the new buttons */
+      input[type="button"]:hover {
+      background-color: white;
+      color: black;
+
+    </style>
+</head>
+<body>
+    <form id="add-putt-form">
+        <h1>Add your new distance</h1>
+<!--        <h1>Add your new club {{ username }}</h1>-->
+        <input type="text" id="putt-name" name="distance" placeholder="distance" required>
+        <br><br><br>
+        <button type="submit">Add Distance</button>
+        <br><br><br><br><br><br><br>
+        <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+        <br><br>
+        <div style="text-align: center;">
+          © 2023 David Barker. All rights reserved.
+        </div>
+    </form>
+
+
+    <script>
+        document.getElementById('add-putt-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const distanceInput = document.getElementById('putt-name');
+            const distance = distanceInput.value.trim();
+
+            if (!distance) {
+                alert('Please enter a putt distance.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('distance', distance);
+
+
+            try {
+                const response = await fetch('/add_putt', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert(`Distance "${distance}" has been added.`);
+                    distanceInput.value = '';
+                    window.location.href = "{{ url_for('edit_putts') }}";
+                } else {
+                   if (response.status === 400) {
+                        alert('This distance already exists for the user.');
+                    } else {
+                        console.error('Error adding distance:', response.statusText);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error adding distance:', error);
+            }
+        });
+    </script>
+</body>
+</html>

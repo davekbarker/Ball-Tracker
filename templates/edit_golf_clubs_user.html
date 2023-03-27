@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f2f2;
+      }
+
+      form {
+        background-color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 900px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 55px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 20px;
+      }
+
+      /* Add styling for the new buttons */
+      button {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 100%;
+      }
+
+      /* Add hover effect for the new buttons */
+      button:hover {
+        background-color: white;
+        color: black;
+      }
+
+      input[type="text"],
+        input[type="password"] {
+        width: 90%;
+        padding: 50px 50px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        font-size: 55px;
+        text-align: center;
+      }
+
+      /* Add styling for the new buttons */
+      input[type="button"] {
+        background-color: #000000;
+        color: white;
+        padding: 50px 60px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 100%;
+
+
+      }
+
+      /* Add hover effect for the new buttons */
+      input[type="button"]:hover {
+      background-color: white;
+      color: black;
+
+    </style>
+</head>
+<body>
+    <form method="POST">
+        <h1>Edit club name: {{ club }}</h1>
+<!--        <h1>Edit Club: {{ username }}</h1>-->
+        <input type="text" id="club-name" name="club" value="{{ club }}" placeholder="new club name"required>
+        <br><br><br>
+        <button type="submit">Save Changes</button>
+        <br><br><br><br><br><br><br>
+        <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+        <br><br>
+    <div style="text-align: center;">
+      © 2023 David Barker. All rights reserved.
+    </div>
+    </form>
+<script>
+
+
+</script>
+</body>
+</html>

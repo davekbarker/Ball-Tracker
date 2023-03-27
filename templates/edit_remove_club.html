@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit or Remove Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+
+        form {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 55px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            background-color: #000000;
+            color: white;
+            padding: 50px 60px;
+            border: 1px solid black;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h1>Which would you like to do?</h1>
+        <div class="buttons-container">
+            <br><br><br>
+            <button id="edit-club" type="button">Edit Name {{ club }}</button>
+            <br>
+            <button id="remove-club">Remove {{ club }}</button>
+            <br><br><br><br><br>
+            <button id="back-to-edit-golf-clubs" type="button">Back to Golf Clubs</button>
+        </div>
+
+        <script>
+            document.getElementById('edit-club').addEventListener('click', () => {
+                window.location.href = "{{ url_for('edit_club_user', club=club) }}";
+            });
+
+            document.getElementById('remove-club').addEventListener('click', async () => {
+                // Ask for confirmation
+                if (!confirm('Are you sure you want to delete this club?')) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/remove_club', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({ club: '{{ club }}' }),
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.result === 'success') {
+                            alert('Club removed successfully');
+                            window.location.href = "{{ url_for('edit_golf_clubs') }}";
+                        } else {
+                            alert('Error removing club: ' + result.message);
+                        }
+                    } else {
+                        alert('Error removing club: ' + response.statusText);
+                    }
+                } catch (error) {
+                    alert('Error removing club: ' + error);
+                }
+            });
+
+
+            document.getElementById('back-to-edit-golf-clubs').addEventListener('click', () => {
+                console.log('Back to Golf Clubs button clicked');
+                window.location.href = "{{ url_for('edit_golf_clubs') }}";
+            });
+        </script>
+        <div style="text-align: center;">
+            © 2023 David Barker. All rights reserved.
+        </div>
+    </form>
+</body>
+</html>

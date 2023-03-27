@@ -6,13 +6,7 @@ from flask import Flask, render_template, g, request, redirect, url_for, session
 from flask_session import Session
 # from flask_login import LoginManager
 
-# DATABASES_DIR = "/Users/Dave/PycharmProjects/mydatabase/databases/"
-# from mydatabase_package import auth
-#from mydatabase_package.auth import bp as auth_bp
-
 app = Flask(__name__, template_folder='../templates')
-# app = Flask(__name__, template_folder='/Users/Dave/PycharmProjects/mydatabase/templates')
-# app = Flask(__name__, template_folder='/root/Ball-Tracker/templates')
 
 # Configure Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -29,9 +23,6 @@ app.config.from_mapping(
     DATABASE='database.sqlite',
     TEMPLATE_FOLDER='templates'
 )
-
-# app.register_blueprint(auth)
-#app.register_blueprint(auth_bp)
 
 
 # Create a connection to the database
@@ -208,20 +199,10 @@ def register():
         print(hashed_password)
         print(name, username, email, hashed_password, ip_address)
 
-        # # Connect to database.db
-        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/database.db')
-        # c = conn.cursor()
         print(f"Database file name: {username}.db")
-        # db_file = os.path.join('/Users/Dave/PycharmProjects/mydatabase', f"{username}.db")
-        # db_file = os.path.join('/Users/Dave/golfers', username, f"{username}.db")
         db_file = f"{get_user_database_filename(username)}"
-        # conn = sqlite3.connect(db_file)
         print(f"Database location: {get_user_database_filename(username)}")
         print(db_file)
-
-        # Get the absolute path of the file
-        # db_file_path = os.path.abspath(db_file)
-        # print(f"Abspath is: {db_file_path}")
 
         # Check if the user database file already exists
         if os.path.exists(db_file):
@@ -235,16 +216,13 @@ def register():
             print(f"Database in progress for user: {username}")
             print(f"Database assembled for user: {username}")
 
-            # Not sure about this code.......
-            # Create the practice table in the user's database
+            # Create the user database
             create_user_database(name, username, email, hashed_password, ip_address)
             print(f"Database completely assembled for user: {username}")
 
-
             # Close the cursor and the connection
-            # c.close()
-            # ##### conn.close()
             print(f"Database created for user: {username}")
+
             # Redirect to login page
             return redirect(url_for('login'))
 
@@ -330,9 +308,6 @@ def range_user():
 
         return render_template("range_user.html", user_club_data=user_club_data, username=username)
 
-
-
-        # return render_template('range_user.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -347,12 +322,260 @@ def play_golf_user():
         return redirect(url_for('login'))
 
 
+@app.route('/add_club_user')
+def add_club_user():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('add_club_user.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/add_club', methods=['POST'])
+def add_club():
+    if 'username' in session:
+        username = session['username']
+        club_name = request.form['club']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        c.execute("SELECT MAX(id) FROM clubs")
+        max_id = c.fetchone()[0]
+        new_id = max_id + 1 if max_id is not None else 1
+
+        c.execute('''INSERT INTO clubs (id, club, direction, hits, distance, total_distance, total_hits, 
+        average_distance, username, ''' + ','.join([f"hit_{i}" for i in range(1, 16)]) + ''') VALUES (?, ?, 0, 0, 0, 0, 
+        0, 0, ?, ''' + ','.join(['50' for _ in range(1, 9)]) + ',' + ','.join(['0' for _ in range(9, 16)]) + ')',
+                  (new_id, club_name, username))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('edit_golf_clubs'))
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/edit_clubs')
 def edit_clubs():
     if 'username' in session:
         username = session['username']
         print(f"Session: {session}")
         return render_template('edit_clubs.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/edit_club_user/<club>', methods=['GET', 'POST'])
+def edit_club_user(club):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+
+    if request.method == 'POST':
+        new_club_name = request.form['club']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+        c.execute('UPDATE clubs SET club = ? WHERE club = ? AND username = ?', (new_club_name, club, username))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('edit_golf_clubs'))
+
+    return render_template('edit_golf_clubs_user.html', username=username, club=club)
+
+
+# @app.route('/edit_distance_user/<distance>/<username>')
+# def edit_distance_user(distance, username):
+#     return "Edit distance for user not implemented yet."
+
+
+@app.route('/remove_distance', methods=['POST'])
+def remove_distance():
+    if 'username' in session:
+        username = session['username']
+        distance = request.form['distance']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+        c.execute('DELETE FROM putts WHERE actual_distance = ? AND username = ?', (distance, username))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'error', 'message': 'User not logged in'})
+
+
+@app.route('/edit_distance_user/<distance>', methods=['GET'])
+def edit_distance_user(distance):
+    if 'username' in session:
+        username = session['username']
+        return render_template('edit_distance_user.html', distance=distance, username=username)
+    else:
+        return jsonify({'result': 'error', 'message': 'User not logged in'})
+
+
+@app.route('/edit_distance', methods=['POST'])
+def edit_distance():
+    if 'username' in session:
+        username = session['username']
+        old_distance = request.form['old_distance']
+        new_distance = request.form['new_distance']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+        c.execute('UPDATE putts SET actual_distance = ? WHERE actual_distance = ? AND username = ?', (new_distance, old_distance, username))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'error', 'message': 'User not logged in'})
+
+
+@app.route('/get_distances', methods=['GET'])
+def get_distances():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+
+    conn = sqlite3.connect(get_user_database_filename(username))
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute('SELECT * FROM putts ORDER BY actual_distance')
+    distances = [dict(row) for row in c.fetchall()]
+    conn.close()
+
+    return jsonify(distances=distances)
+
+
+@app.route('/add_putt_user', methods=['GET', 'POST'])
+def add_putt_user():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('add_putt_user.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/add_putt', methods=['POST'])
+def add_putt():
+    if 'username' in session:
+        username = session['username']
+        actual_distance = int(request.form['distance'])
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        # Check if the actual_distance already exists for the user
+        c.execute("SELECT * FROM putts WHERE actual_distance = ? AND username = ?", (actual_distance, username))
+        existing_entry = c.fetchone()
+
+        if existing_entry:
+            # If the actual_distance already exists for the user, return an error message
+            conn.close()
+            return "This distance already exists for the user.", 400
+        else:
+            # c.execute('''INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits,
+            # total_distance, username, ''' + ','.join([f"hit_{i}" for i in range(1, 16)]) + ''') VALUES (?, 0, 0, 0, 0, 0, ?,
+            # ''' + ','.join(['50' for _ in range(1, 9)]) + ',' + ','.join(['0' for _ in range(9, 16)]) + ')',
+            #           (actual_distance, username))
+            # c.execute('''INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits,
+            # total_distance, username, ''' + ','.join([f"hit_{i}" for i in range(1, 16)]) + ''') VALUES (?, 0, 0, 0, 0, 0, ?,
+            # ''' + ','.join(['50' for _ in range(6, 11)]) + ',' + ','.join(['0' for _ in range(1, 6)]) + ',' + ','.join(
+            #     ['0' for _ in range(11, 16)]) + ')',
+            #           (actual_distance, username))
+            c.execute('''INSERT INTO putts (actual_distance, average_distance, average_direction, average_putts, hits, 
+            total_distance, username, ''' + ','.join([f"hit_{i}" for i in range(1, 16)]) + ''') VALUES (?, 0, 0, 0, 0, 0, ?, 
+            ''' + ','.join(['0' for _ in range(1, 6)]) + ',' + ','.join(['50' for _ in range(6, 11)]) + ',' + ','.join(
+                ['0' for _ in range(11, 16)]) + ')',
+                      (actual_distance, username))
+
+            conn.commit()
+            conn.close()
+
+            return redirect(url_for('edit_putts'))
+    else:
+        return redirect(url_for('login'))
+
+
+
+
+# @app.route('/add_putt', methods=['POST'])
+# def add_putt():
+#     if 'username' in session:
+#         username = session['username']
+#         club_name = request.form['club']
+#
+#         conn = sqlite3.connect(get_user_database_filename(username))
+#         c = conn.cursor()
+#
+#         c.execute("SELECT MAX(id) FROM putts")
+#         max_id = c.fetchone()[0]
+#         new_id = max_id + 1 if max_id is not None else 1
+#
+#         c.execute('''INSERT INTO putts (id, club, direction, hits, distance, total_distance, total_hits,
+#         average_distance, username, ''' + ','.join([f"hit_{i}" for i in range(1, 16)]) + ''') VALUES (?, ?, 0, 0, 0, 0,
+#         0, 0, ?, ''' + ','.join(['50' for _ in range(1, 9)]) + ',' + ','.join(['0' for _ in range(9, 16)]) + ')',
+#                   (new_id, club_name, username))
+#
+#         conn.commit()
+#         conn.close()
+#
+#         return redirect(url_for('edit_putts'))
+#     else:
+#         return redirect(url_for('login'))
+
+
+@app.route('/edit_putts')
+def edit_putts():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('edit_putts.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/edit_remove_distance/<distance>')
+def edit_remove_distance(distance):
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('edit_remove_distance.html', distance=distance, username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/remove_club', methods=['POST'])
+def remove_club():
+    # You can remove username from this.... it is redundant, but whatever
+    if 'username' in session:
+        username = session['username']
+        club = request.form['club']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+        c.execute('DELETE FROM clubs WHERE club = ? AND username = ?', (club, username))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'error', 'message': 'User not logged in'})
+
+
+@app.route('/edit_remove_club/<club>')
+def edit_remove_club(club):
+    if 'username' in session:
+        return render_template('edit_remove_club.html', club=club)
     else:
         return redirect(url_for('login'))
 
@@ -390,6 +613,16 @@ def practice_page():
         username = session['username']
         print(f"Session: {session}")
         return render_template('practice_page.html', username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/edit_golf_clubs')
+def edit_golf_clubs():
+    if 'username' in session:
+        username = session['username']
+        print(f"Session: {session}")
+        return render_template('edit_golf_clubs.html', username=username)
     else:
         return redirect(url_for('login'))
 
@@ -540,8 +773,6 @@ def practice():
     if not os.path.exists(get_database_filename(ip_address)):
         create_new_database(ip_address)
 
-    # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-    # conn = sqlite3.connect('./practice.db')
     conn = sqlite3.connect(get_database_filename(ip_address))
     c = conn.cursor()
 
@@ -593,33 +824,11 @@ def submit_shot():
         conn = sqlite3.connect(get_database_filename(ip_address))
         c = conn.cursor()
 
-        # Print statements do not work here like this because we are redirecting to url
-        # print(f"club: {club}, distance: {distance}, direction: {direction}")
-
-        # conn = sqlite3.connect('/Users/Dave/PycharmProjects/mydatabase/practice.db')
-        # conn = sqlite3.connect('./practice.db')
-        # c = conn.cursor()
-
         try:
             # print("the attempt?")
             # Retrieve the current direction, hits, total_distance, and average_distance values for the selected club
             c.execute("SELECT * FROM practice WHERE club = ?", (club,))
             row = c.fetchone()
-
-            # print("the attemptZZ?")
-            # print(type(row[0]), type(row[1]), type(row[2]), type(row[3]), type(row[4]), type(row[5]), type(row[6]),
-            #       type(row[7]))
-
-            # Print statements do not work here like this because we are redirecting to url
-
-            # print(
-            # f"club: {club}, distance: {distance}, direction: {direction}")  # add this line to print the received data
-
-            # # Print the values retrieved from the database
-            # print(f"Current id: {row[0]}, Current club: {row[1]},
-            #   Current direction: {row[2]}, Current distance: {row[3]}")
-            # print(f"Current direction: {row[2]}, hits: {row[3]},
-            #   total_distance: {row[5]}, average_distance: {row[7]}")
 
             if row is None:
                 # print("the attempt 2")
@@ -1086,6 +1295,23 @@ def practice_stats():
     print("practice_stats 2")
     print(practice_data)
     return jsonify(practice_data)
+
+
+@app.route('/get_clubs', methods=['GET'])
+def get_clubs():
+    print("get_clubs()")
+    if 'username' in session:
+        username = session['username']
+
+        conn = sqlite3.connect(get_user_database_filename(username))
+        c = conn.cursor()
+
+        c.execute("SELECT club FROM clubs")
+        clubs = [row[0] for row in c.fetchall()]
+
+        return jsonify(clubs=clubs)
+    else:
+        return redirect(url_for('login'))
 
 
 # practice_stats turned to user_stats

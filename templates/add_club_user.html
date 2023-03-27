@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Club</title>
     <style>
+      /* Add some styling to make the page look nice */
       body {
         font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         background-color: #f2f2f2;
+        padding: 20px;
       }
 
       form {
@@ -29,63 +31,43 @@
         font-size: 55px;
       }
 
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      li {
-        margin-bottom: 20px;
-      }
-
-      /* Add styling for the new buttons */
-      button {
-        background-color: #000000;
-        color: white;
-        padding: 50px 60px;
-        border: 1px solid black;
-        border-radius: 15px;
-        cursor: pointer;
-        font-size: 55px;
-        width: 100%;
-      }
+<!--      /* Add styling for the new buttons */-->
+<!--      input[type="button"] {-->
+<!--        background-color: #000000;-->
+<!--        color: white;-->
+<!--        padding: 50px 60px;-->
+<!--        border: 1px solid black;-->
+<!--        border-radius: 15px;-->
+<!--        cursor: pointer;-->
+<!--        font-size: 55px;-->
+<!--        width: 95%;-->
+<!--        margin-bottom: 20px;-->
+<!--      }-->
 
       /* Add hover effect for the new buttons */
-      button:hover {
+      input[type="button"]:hover {
         background-color: white;
         color: black;
       }
 
-      input[type="text"],
-        input[type="password"] {
-        width: 90%;
-        padding: 50px 50px;
-        margin-bottom: 20px;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        font-size: 55px;
-        text-align: center;
-      }
-
-      /* Add styling for the new buttons */
-      input[type="button"] {
+      /* Add styling for the home button */
+      .home {
         background-color: #000000;
         color: white;
-        padding: 50px 60px;
-        border: 1px solid black;
+        padding: 30px 40px;
+        border: none;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 55px;
-        width: 100%;
-
-
+        font-size: 25px;
+        width: 200px;
+        margin-bottom: 20px;
       }
 
-      /* Add hover effect for the new buttons */
-      input[type="button"]:hover {
-      background-color: white;
-      color: black;
+      /* Add hover effect for the home button */
+      .home:hover {
+        background-color: white;
+        color: black;
+      }
 
     </style>
 </head>

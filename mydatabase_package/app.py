@@ -1,3 +1,5 @@
+import datetime
+
 import bcrypt
 import os
 import sys
@@ -23,6 +25,11 @@ app.config.from_mapping(
     DATABASE='database.sqlite',
     TEMPLATE_FOLDER='templates'
 )
+
+
+# THE SWITCH:
+# 2 '..' for droplet
+deployed = '.'
 
 
 # Create a connection to the database
@@ -68,7 +75,7 @@ def index():
     # 2 '..' for droplet
 
     # connection = sqlite3.connect("../mydatabase.db")
-    connection = sqlite3.connect("./mydatabase.db")
+    connection = sqlite3.connect(deployed + "/mydatabase.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM my_table")
     rows = cursor.fetchall()
@@ -92,7 +99,7 @@ def range_time():
 
     # Connect to clubs.db
     # conn = sqlite3.connect('../clubs.db')
-    conn = sqlite3.connect('./clubs.db')
+    conn = sqlite3.connect(deployed + '/clubs.db')
     c = conn.cursor()
 
     # Retrieve all club names from the golf_clubs table
@@ -115,7 +122,7 @@ def submit_direction():
 
         # Connect to clubs.db
         # conn = sqlite3.connect('../clubs.db')
-        conn = sqlite3.connect('./clubs.db')
+        conn = sqlite3.connect(deployed + '/clubs.db')
         c = conn.cursor()
 
         try:
@@ -146,7 +153,7 @@ def current_stats():
 
     # Connect to clubs.db
     # conn = sqlite3.connect('../clubs.db')
-    conn = sqlite3.connect('./clubs.db')
+    conn = sqlite3.connect(deployed + '/clubs.db')
     c = conn.cursor()
 
     c.execute("SELECT name, direction, distance, hits FROM golf_clubs")
@@ -161,7 +168,7 @@ def clear_stats():
 
     # Connect to clubs.db
     # conn = sqlite3.connect('../clubs.db')
-    conn = sqlite3.connect('./clubs.db')
+    conn = sqlite3.connect(deployed + '/clubs.db')
     c = conn.cursor()
 
     if request.method == 'POST':
@@ -246,7 +253,7 @@ def login():
             print(f"Accessed database: {get_user_database_filename(username)}")
             # print(f"Username: {username} Password: {password}")
             c = conn.cursor()
-
+            # ***** I do believe the issue is fixed since there is no longer a way to access a .db without 'users'
             # ***** There is still a bug right here..... if you access a .db without a 'users' table it will crash ****
             # ***** Will fix when it's an issue, all it should need is another if/else block, long hair no care *****
             # Get the hashed password for the user
@@ -661,14 +668,14 @@ def get_user_database_filename(username):
     # 2 '..' for droplet
 
     # return f'../golfers/{username}.db'
-    return f'./golfers/{username}.db'
+    return f'{deployed}/golfers/{username}.db'
 
 
 def get_database_filename(ip_address):
     # 2 '..' for droplet
 
     # return f'../practice.dashboard/practice.{ip_address}.db'
-    return f'./practice.dashboard/practice.{ip_address}.db'
+    return f'{deployed}/practice.dashboard/practice.{ip_address}.db'
 
 
 def create_user_database(name, username, email, hashed_password, ip_address):
@@ -1339,6 +1346,53 @@ def user_stats():
         return jsonify(user_putt_data, user_club_data)
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/user_chat', methods=['GET', 'POST'])
+def user_chat():
+    if 'username' in session:
+        username = session['username']
+        if request.method == 'POST':
+            # username = request.form['username']
+            # comment = request.form['comment']
+            # timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            if not os.path.exists(deployed + '/templates/public_user_chat.db'):
+                conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
+                c = conn.cursor()
+                c.execute('''CREATE TABLE comments
+                                 (username text, comment text, timestamp text)''')
+                conn.commit()
+                conn.close()
+
+            if request.method == 'POST':
+                # username = request.form['username']
+                comment = request.form['comment']
+                timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
+                c = conn.cursor()
+                c.execute('INSERT INTO comments VALUES (?, ?, ?)', (username, comment, timestamp))
+                conn.commit()
+                conn.close()
+
+        conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM comments')
+        comments = c.fetchall()
+        conn.close()
+
+        return render_template('user_chat.html', username=username, comments=comments)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/comments')
+def get_comments():
+    conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM comments ORDER BY timestamp DESC')
+    rows = c.fetchall()
+    conn.close()
+    return jsonify(rows)
 
 
 if __name__ == '__main__':

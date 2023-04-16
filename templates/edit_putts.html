@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
     <!-- (Existing head content) -->
     <title>Edit {{ username }}'s Putts</title>
     <style>
@@ -88,8 +91,8 @@
 </head>
 <body>
     <form>
-        <h1>Edit {{ username }}'s Putts</h1>
-        <h2><b>Select a distance to edit</b></h2>
+        <h1>Edit Putter Distance</h1>
+        <h2><b>Select a distance to edit or remove</b></h2>
         <br>
         <ul id="distances-container">
             <!-- Distance buttons will be added here by JavaScript -->
@@ -135,6 +138,7 @@
                 console.error('Error fetching distances:', error);
             }
         });
+        console.log('tell your friends about https://www.trackmyballs.com')
     </script>
 </body>
 </html>

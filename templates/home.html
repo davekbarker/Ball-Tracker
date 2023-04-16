@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <meta name = "Author" content= "David Barker"/>
     <meta name = "description" content= "All Rights Reserved"/>
     <title>Track My Balls</title>
   <style>
+
   /* Add some styling to make the page look nice */
   body {
     font-family: Arial, sans-serif;
@@ -82,6 +84,20 @@
 
   }
 
+  .button-range-demo {
+    background-color: #000000;
+    color: white;
+    padding: 30px 40px;
+    border: 1px solid black;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 40px;
+    width: 70%;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left 10px;
+  }
+
   .button-demo {
     background-color: #000000;
     color: white;
@@ -98,6 +114,11 @@
 
   /* Add hover effect for the new buttons */
   .button-demo:hover {
+    background-color: white;
+    color: black;
+  }
+
+  .button-range-demo:hover {
     background-color: white;
     color: black;
   }
@@ -125,8 +146,8 @@
     <br><br><br>
 
     <div class="demo-butts">
-      <button class="button-demo" onclick="location.href='{{ url_for('index') }}'">Demo Dashboard 1.0</button>
-      <button class="button-demo" onclick="location.href='{{ url_for('practice') }}'">Demo Dashboard 2.0</button>
+<!--      <button class="button-demo" onclick="location.href='{{ url_for('index') }}'">Demo Dashboard 1.0</button>-->
+      <button class="button-range-demo" onclick="location.href='{{ url_for('practice') }}'">Demo Range Dashboard</button>
     </div>
 
     <br>
@@ -152,7 +173,7 @@
 
     </div>
   <script>
-          console.log('tell your friends about http://www.trackmyballs.com')
+          console.log('tell your friends about https://www.trackmyballs.com')
   </script>
   </body>
 </html>

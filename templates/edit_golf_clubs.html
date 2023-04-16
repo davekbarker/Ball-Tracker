@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="Author" content="David Barker" />
     <meta name="description" content="All Rights Reserved" />
     <title>Edit {{ username }}'s Golf Bag</title>
@@ -78,8 +79,8 @@
 </head>
 <body>
     <form>
-        <h1>Edit {{ username }}'s Golf Bag</h1>
-        <h2><b>Select a club to edit</b></h2>
+        <h1>Edit Golf Bag</h1>
+        <h2><b>Select a club to edit or remove</b></h2>
         <br>
         <ul id="clubs-container">
             <!-- Club buttons will be added here by JavaScript -->
@@ -123,6 +124,7 @@
                 console.error('Error fetching clubs:', error);
             }
         });
+        console.log('tell your friends about https://www.trackmyballs.com')
     </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name="Author" content="David Barker" />
     <meta name="description" content="All Rights Reserved" />
     <title> {{ username }}'s Practice Page</title>
@@ -70,7 +71,7 @@
   </head>
   <body>
     <form>
-      <h1>Where are you practicing?</h1>
+      <h1>What are you practicing?</h1>
 
       <p></p>
       <p></p>
@@ -82,9 +83,9 @@
 <!--      <input class="home" type="button" value="Home" onclick="location.href='{{ url_for('home') }}'">-->
 <!--      <input class="logOut" type="button" value="Play Golf" onclick="location.href='{{ url_for('logout') }}'">-->
       <br><br>
-      <input class="logOut" type="button" value="Putting Practice" onclick="location.href='{{ url_for('putt_user') }}'">
+      <input class="logOut" type="button" value="Range" onclick="location.href='{{ url_for('range_user') }}'">
       <br><br><br><br>
-      <input class="logOut" type="button" value="Range Time" onclick="location.href='{{ url_for('range_user') }}'">
+      <input class="logOut" type="button" value="Putting" onclick="location.href='{{ url_for('putt_user') }}'">
       <br><br><br><br><br><br><br>
       <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
       <br><br>
@@ -97,7 +98,9 @@
 
 
     </form>
-
+<script>
+  console.log('tell your friends about https://www.trackmyballs.com')
+</script>
   </body>
   <br>
 

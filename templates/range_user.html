@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name = "Author" content= "David Barker"/>
     <meta name = "description" content= "All Rights Reserved"/>
     <title> {{ username }}'s Range Dashboard</title>
@@ -159,7 +160,7 @@
   </head>
   <body>
   <div class="container">
-    <h1 id="h1-title">Range Time for {{ username }}</h1>
+    <h1 id="h1-title">{{ username }}'s range dashboard</h1>
 <!--      <p> Still need to finish EVERYTHING on the back end of this</p>-->
 <!--    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>-->
     <br>
@@ -279,7 +280,7 @@ function refreshPracticeTable() {
 
 
 <!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
-        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
 
       });
     });
@@ -314,11 +315,11 @@ form.addEventListener('submit', event => {
       refreshPracticeTable();
     });
 });
-
+console.log('tell your friends about https://www.trackmyballs.com')
 </script>
         </div>
 <h3 style ="text-align: center">
-    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+    <p>Select your club, enter the distance your ball goes, and select the ball's direction<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
     <p><u>**please note you must include a distance with this version for it to calculate**</u></p></h3>

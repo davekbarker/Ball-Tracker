@@ -2,72 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
     <title>Add Club</title>
     <style>
-      /* Add some styling to make the page look nice */
       body {
         font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
         background-color: #f2f2f2;
         padding: 20px;
       }
 
       form {
         background-color: white;
-        padding: 40px;
+        padding: 30px;
         border-radius: 15px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        width: 900px;
+        width: 420px;
         text-align: center;
       }
 
       h1 {
         margin-bottom: 30px;
-        font-size: 55px;
+        font-size: 30px;
       }
 
-<!--      /* Add styling for the new buttons */-->
-<!--      input[type="button"] {-->
-<!--        background-color: #000000;-->
-<!--        color: white;-->
-<!--        padding: 50px 60px;-->
-<!--        border: 1px solid black;-->
-<!--        border-radius: 15px;-->
-<!--        cursor: pointer;-->
-<!--        font-size: 55px;-->
-<!--        width: 95%;-->
-<!--        margin-bottom: 20px;-->
-<!--      }-->
-
-      /* Add hover effect for the new buttons */
-      input[type="button"]:hover {
-        background-color: white;
-        color: black;
+      ul {
+        list-style-type: none;
+        padding: 0;
       }
 
-      /* Add styling for the home button */
-      .home {
+      li {
+        margin-bottom: 0px;
+      }
+
+      /* Add styling for the new buttons */
+      button {
         background-color: #000000;
         color: white;
         padding: 30px 40px;
-        border: none;
+        border: 1px solid black;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 25px;
-        width: 200px;
-        margin-bottom: 20px;
+        font-size: 30px;
+        width: 90%;
       }
 
-      /* Add hover effect for the home button */
-      .home:hover {
+      /* Add hover effect for the new buttons */
+      button:hover {
         background-color: white;
         color: black;
       }
+
+      input[type="text"],
+        input[type="password"] {
+        width: 75%;
+        padding: 30px 40px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        font-size: 35px;
+        text-align: center;
+      }
+
+      /* Add styling for the new buttons */
+      input[type="button"] {
+        background-color: #000000;
+        color: white;
+        padding: 20px 30px;
+        border: 1px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 30px;
+        width: 100%;
+        align-text: center;
+
+
+      }
+
+      /* Add hover effect for the new buttons */
+      input[type="button"]:hover {
+      background-color: white;
+      color: black;
 
     </style>
 </head>
@@ -79,7 +98,7 @@
         <br><br><br>
         <button type="submit">Add Club</button>
         <br><br><br><br><br><br><br>
-        <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+        <input class="logOut" type="button" value="Back To Golf Clubs" onclick="location.href='{{ url_for('edit_golf_clubs') }}'">
         <br><br>
     <div style="text-align: center;">
       © 2023 David Barker. All rights reserved.
@@ -120,6 +139,7 @@
                 console.error('Error adding club:', error);
             }
         });
+        console.log('tell your friends about https://www.trackmyballs.com')
     </script>
 </body>
 </html>

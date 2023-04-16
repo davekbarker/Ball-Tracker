@@ -11,23 +11,22 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
         background-color: #f2f2f2;
         padding: 20px;
       }
 
       form {
         background-color: white;
-        padding: 40px;
+        padding: 30px;
         border-radius: 15px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        width: 900px;
+        width: 420px;
         text-align: center;
       }
 
       h1 {
         margin-bottom: 30px;
-        font-size: 55px;
+        font-size: 30px;
       }
 
       ul {
@@ -36,19 +35,19 @@
       }
 
       li {
-        margin-bottom: 20px;
+        margin-bottom: 0px;
       }
 
       /* Add styling for the new buttons */
       button {
         background-color: #000000;
         color: white;
-        padding: 50px 60px;
+        padding: 30px 40px;
         border: 1px solid black;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 55px;
-        width: 100%;
+        font-size: 30px;
+        width: 90%;
       }
 
       /* Add hover effect for the new buttons */
@@ -59,13 +58,13 @@
 
       input[type="text"],
         input[type="password"] {
-        width: 90%;
-        padding: 50px 50px;
+        width: 75%;
+        padding: 30px 40px;
         margin-bottom: 20px;
         border: none;
         border-radius: 5px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        font-size: 55px;
+        font-size: 35px;
         text-align: center;
       }
 
@@ -73,11 +72,11 @@
       input[type="button"] {
         background-color: #000000;
         color: white;
-        padding: 50px 60px;
+        padding: 20px 30px;
         border: 1px solid black;
         border-radius: 15px;
         cursor: pointer;
-        font-size: 55px;
+        font-size: 30px;
         width: 100%;
 
 
@@ -98,7 +97,7 @@
         <br><br><br>
         <button type="submit">Add Distance</button>
         <br><br><br><br><br><br><br>
-        <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+        <input class="logOut" type="button" value="Back To Distances" onclick="location.href='{{ url_for('edit_putts') }}'">
         <br><br>
         <div style="text-align: center;">
           © 2023 David Barker. All rights reserved.
@@ -144,6 +143,7 @@
                 console.error('Error adding distance:', error);
             }
         });
+        console.log('tell your friends about https://www.trackmyballs.com')
     </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name = "Author" content= "David Barker"/>
     <meta name = "description" content= "All Rights Reserved"/>
     <title> {{ username }}'s Putting Dashboard</title>
@@ -182,14 +183,14 @@
   </head>
   <body>
   <div class="container">
-    <h1 id="h1-title">Putting Practice for {{ username }}</h1>
+    <h1 id="h1-title">{{ username }}'s putting dashboard</h1>
 <!--    <h2><b>You have <u><span id="time-left"></span></u> seconds left to practice</b></h2>-->
     <br>
     <form method="POST" action="{{ url_for('user_stats') }}" id="shot-form">
         <table id="tableClubDistance">
             <tr>
-                <td><label for="actual_distance" style="padding-left: 0%" class="input-title"><u><b>Distance</b></u></label></td>
-                <td><label for="distance" style="padding-left: 30%" class="input-title"><u><b>Ball Distance</b></u></label></td>
+                <td><label for="actual_distance" style="padding-left: 0%" class="input-title"><u><b>Pin Distance</b></u></label></td>
+                <td><label for="distance" style="padding-left: 30%" class="input-title"><u><b>Distance Hit</b></u></label></td>
             </tr>
             <tr>
                 <td><select name="actual_distance" id="actual_distance" class="pract-input">
@@ -313,7 +314,7 @@ function refreshPracticeTable() {
 
 
 <!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
-        row.innerHTML = `<td>${actual_distance}</td><td>${average_distance}</td><td><input type="range" min="0" max="100" value="${average_direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${average_putts}</td>`;
+        row.innerHTML = `<td>${actual_distance}</td><td>${average_distance}</td><td><input type="range" min="0" max="100" value="${average_direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${average_putts}</td>`;
 
       });
     });
@@ -358,12 +359,13 @@ function user_submit_putt(event) {
       refreshPracticeTable();
     });
 }
-
+console.log('tell your friends about https://www.trackmyballs.com')
 </script>
         </div>
 <h3 style ="text-align: center">
-    <p>Select the distance, enter how far your ball goes, and select the ball's direction<p>
+    <p>Select the distance you are away from the pin, enter how far your ball goes, and select the ball's direction<p>
     <p>Click on how many putts it took and watch the magic happen!</p>
+
 <!--    <br>-->
 <!--    <p>When the timer runs out the form will reset</p>-->
     <br>

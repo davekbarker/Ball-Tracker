@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name="Author" content="David Barker" />
     <meta name="description" content="All Rights Reserved" />
     <title> {{ username }}'s edit clubs</title>
@@ -84,9 +85,9 @@
       <br><br>
       <input class="logOut" type="button" value="Golf Bag Clubs" onclick="location.href='{{ url_for('edit_golf_clubs') }}'">
       <br><br>
-      <input class="logOut" type="button" value="Putter Distance" onclick="location.href='{{ url_for('edit_putts') }}'">
+      <input class="logOut" type="button" value="Putter Distances" onclick="location.href='{{ url_for('edit_putts') }}'">
       <br><br>
-      <input class="logOut" type="button" value="Clear Values" onclick="location.href='{{ url_for('clear_values') }}'">
+      <input class="logOut" type="button" value="Reset Values" onclick="location.href='{{ url_for('clear_values') }}'">
       <br><br><br><br><br><br><br>
       <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
       <br><br>
@@ -99,7 +100,9 @@
 
 
     </form>
-
+<script>
+  console.log('tell your friends about https://www.trackmyballs.com')
+</script>
   </body>
   <br>
 

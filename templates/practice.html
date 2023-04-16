@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name = "Author" content= "David Barker"/>
     <meta name = "description" content= "All Rights Reserved"/>
     <title>Demo Dashboard - Track My Balls</title>
@@ -165,7 +166,7 @@
   </head>
   <body>
   <div class="container">
-    <h1 id="h1-title">Demo Dashboard 2.0</h1>
+    <h1 id="h1-title">Demo Range Dashboard</h1>
     <h2><b>TIME LEFT: <u><span id="time-left"></span></u></b></h2>
       <h4>Create an account and get rid of the timer!</h4>
     <br>
@@ -319,7 +320,7 @@ function refreshPracticeTable() {
 
 
 <!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
-        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;"></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
 
       });
     });
@@ -354,11 +355,11 @@ form.addEventListener('submit', event => {
       refreshPracticeTable();
     });
 });
-
+console.log('tell your friends about https://www.trackmyballs.com')
 </script>
         </div>
 <h3 style ="text-align: center">
-    <p>Select your club, enter how far your ball goes, and select the ball's direction<p>
+    <p>Select your club, enter the distance your ball goes, and select the ball's direction<p>
     <p>Click Submit Shot and watch the magic happen!</p>
     <br>
     <p>When the timer runs out the form will reset</p>

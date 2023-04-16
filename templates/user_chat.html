@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name = "Author" content= "David Barker"/>
+    <meta name = "description" content= "All Rights Reserved"/>
+    <title>User Chat for {{ username }}</title>
+
+    <style>
+
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+}
+
+form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: 900px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 30px 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  font-size: 25px;
+  text-align: center;
+}
+
+input[type="submit"] {
+  background-color: #000000;
+  color: white;
+  padding: 30px 40px;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 45px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Add hover effect for the button */
+input[type="submit"]:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Add styling for the new buttons */
+input[type="button"] {
+  background-color: #000000;
+  padding-top: 10px;
+  color: white;
+  padding: 30px 40px;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 46px;
+  width: 100%;
+  margin-bottom: 20px;
+  float: center;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+/* Add hover effect for the new buttons */
+input[type="button"]:hover {
+  background-color: white;
+  color: black;
+}
+
+textarea {
+  width: 80%;
+  padding: 30px 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  font-size: 35px;
+  text-align: left;
+  height: 150px;
+}
+
+.comments-section {
+  margin-top: 30px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.comment {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  display: inline-block;
+  max-width: 90%;
+
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment .username {
+  font-weight: bold;
+}
+
+.comment .timestamp {
+  font-style: italic;
+  font-size: smaller;
+  color: #666;
+}
+
+.comment-box {
+  background: linear-gradient(to bottom, #f7f7f7, #e7e7e7);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+}
+
+<!--.comment-box {-->
+<!--  background-color: #fff;-->
+<!--  border: 1px solid #ccc;-->
+<!--  border-radius: 5px;-->
+<!--  margin-bottom: 20px;-->
+<!--  padding: 10px;-->
+<!--  position: relative;-->
+<!--}-->
+
+.comment-box .username {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: bold;
+}
+
+.comment-box .timestamp {
+  position: absolute;
+  top: 0;
+  left: 100px;
+  font-style: italic;
+  font-size: smaller;
+}
+
+.comment-box .comment {
+  margin-top: 10px;
+
+}
+
+.comment-container {
+  background: linear-gradient(to bottom, #f7f7f7, #e7e7e7);
+  width: 96%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 1px 1px 0 #ccc, 2px 2px 0 #ccc, 3px 3px 0 #ccc, 4px 4px 0 #ccc, 5px 5px 0 #ccc, 6px 6px 0 #ccc, 7px 7px 0 #ccc;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+}
+
+.comment-header .username {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-header .timestamp {
+  font-style: italic;
+  font-size: smaller;
+  color: #666;
+}
+
+.comment-body {
+  margin-left: 20px;
+}
+
+.username {
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+}
+
+.timestamp {
+  font-style: italic;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.comment {
+  margin-top: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+}
+
+.comment-section li {
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-section p {
+  margin: 5px 0;
+}
+
+.comment-section strong {
+  font-weight: bold;
+}
+
+.comment-section em {
+  font-style: italic;
+  font-size: smaller;
+}
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 55px;
+      }
+
+
+    </style>
+</head>
+<body>
+    <form method="POST" action="/user_chat" autocomplete="off">
+<!--        <div class="comments-section">-->
+<!--        <h2>Comments</h2>-->
+<!--&lt;!&ndash;        <ul>&ndash;&gt;-->
+<!--&lt;!&ndash;            {% for row in comments %}&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p><strong>{{ row[0] }}:</strong> {{ row[1] }}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <p><em>{{ row[2] }}</em></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            </li>&ndash;&gt;-->
+<!--&lt;!&ndash;            {% endfor %}&ndash;&gt;-->
+<!--&lt;!&ndash;        </ul>&ndash;&gt;-->
+
+<!--            <ul class="comments">-->
+<!--              {% for row in comments %}-->
+<!--              <li>-->
+<!--                <div class="comment">-->
+<!--                  <span class="timestamp">{{ row[2] }} </span>-->
+<!--                  <span class="username">{{ row[0] }}</span>-->
+
+<!--                </div>-->
+<!--                <p>{{ row[1] }}</p>-->
+<!--              </li>-->
+<!--              {% endfor %}-->
+<!--            </ul>-->
+<!--        </div>-->
+
+
+<!--<div class="comments-section">-->
+<!--  <h2>Comments</h2>-->
+<!--  {% for row in comments %}-->
+<!--    <div class="comment-box">-->
+<!--      <p class="username">{{ row[0] }}</p>-->
+<!--      <p class="timestamp">{{ row[2] }}</p>-->
+<!--      <p class="comment">{{ row[1] }}</p>-->
+<!--    </div>-->
+<!--  {% endfor %}-->
+<!--</div>-->
+
+  <h1>Live Chat</h1>
+  <p>This chat room is public to all registered users</p>
+<div class="comments-section">
+
+  {% for row in comments[::-1] %}
+  <div class="comment-container">
+    <div class="comment-header">
+      <span class="username">{{ row[0] }}</span>
+      <span class="timestamp">{{ row[2] }}</span>
+    </div>
+    <div class="comment-body">
+      <p>{{ row[1] }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<!--      <label for="username">Username:</label>-->
+<!--      <input type="text" name="username" id="username" required>-->
+        <br>
+<!--      <label for="comment">Comment:</label>-->
+        <br>
+        <textarea name="comment" id="comment" class="comment-box" required></textarea>
+        <br>
+        <input type="submit" value="Add Comment">
+              <br><br><br><br><br><br><br>
+      <input class="logOut" type="button" value="Back To Dashboard" onclick="location.href='{{ url_for('dashboard') }}'">
+            <div style="clear:both; text-align: center;">
+          © 2023 David Barker. All rights reserved.
+      </div>
+    </form>
+<script>
+function loadComments() {
+  var commentsSection = document.querySelector('.comments-section');
+  fetch('/comments?_=' + Date.now())
+    .then(response => response.json())
+    .then(data => {
+      var html = '';
+      data.forEach(row => {
+        html += `
+          <div class="comment-container">
+            <div class="comment-header">
+              <span class="username">${row[0]}</span>
+              <span class="timestamp">${row[2]}</span>
+            </div>
+            <div class="comment-body">
+              <p>${row[1]}</p>
+            </div>
+          </div>
+        `;
+      });
+      commentsSection.innerHTML = html;
+    });
+}
+
+// Load comments initially
+<!--loadComments();-->
+
+// Refresh comments every 5 seconds
+setInterval(loadComments, 5000);
+
+console.log('tell your friends about https://www.trackmyballs.com')
+</script>
+</body>
+</html>

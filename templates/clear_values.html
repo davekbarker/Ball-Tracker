@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <meta name="Author" content="David Barker" />
     <meta name="description" content="All Rights Reserved" />
     <title> {{ username }}'s clear values</title>
@@ -70,7 +71,7 @@
   </head>
   <body>
     <form method="POST" id="clear-form">
-      <h1>What would you lke to clear?</h1>
+      <h1>What would you like to reset?</h1>
 
 <!--      <p><b><u>Individual Club Option Does Not Work Quite Yet</u></b></p>-->
       <p></p>
@@ -84,9 +85,10 @@
 <!--      <br><br>-->
 <!--      <input class="logOut" type="button" value="Individual Club" onclick="submitForm('clear_values')">-->
       <br><br>
-      <input class="logOut" type="button" value="Putting Table Data" onclick="submitForm('user_clear_putts')">
+      <input class="logOut" type="button" value="All Range Data" onclick="submitForm('user_clear_clubs')">
+
       <br><br>
-      <input class="logOut" type="button" value="Range Table Data" onclick="submitForm('user_clear_clubs')">
+      <input class="logOut" type="button" value="All Putting Data" onclick="submitForm('user_clear_putts')">
       <br><br><br><br><br><br><br>
       <input class="logOut" type="button" value="Back To Dashboard" onclick="submitForm('dashboard')">
       <br><br>
@@ -102,13 +104,14 @@
         var form = document.getElementById('clear-form');
         form.action = '/' + action;
           if (action === 'clear_values' || action === 'user_clear_putts' || action === 'user_clear_clubs') {
-            if (confirm("Are you sure you want to clear the data?")) {
+            if (confirm("Are you sure you?")) {
               form.submit();
             }
           } else {
             form.submit();
           }
       }
+      console.log('tell your friends about https://www.trackmyballs.com')
 </script>
   </body>
   <br>

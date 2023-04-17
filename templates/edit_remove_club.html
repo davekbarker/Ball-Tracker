@@ -11,21 +11,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             background-color: #f2f2f2;
+            padding: 20px;
         }
 
         form {
             background-color: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            width: 420px;
+            width: 900px;
             text-align: center;
         }
 
         h1 {
-            margin-bottom: 20px;
-            font-size: 25px;
+            margin-bottom: 30px;
+            font-size: 55px;
         }
 
         .buttons-container {
@@ -41,8 +43,9 @@
             border: 1px solid black;
             border-radius: 15px;
             cursor: pointer;
-            font-size: 25px;
+            font-size: 50px;
             margin-bottom: 20px;
+            width: 90%;
         }
 
         button:hover {
@@ -89,13 +92,16 @@
                             alert('Club removed successfully');
                             window.location.href = "{{ url_for('edit_golf_clubs') }}";
                         } else {
-                            alert('Error removing club: ' + result.message);
+                            window.location.href = "{{ url_for('edit_golf_clubs') }}";
+<!--                            alert('Error removing club: ' + result.message);-->
                         }
                     } else {
-                        alert('Error removing club: ' + response.statusText);
+                        window.location.href = "{{ url_for('edit_golf_clubs') }}";
+<!--                        alert('Error removing club: ' + response.statusText);-->
                     }
                 } catch (error) {
-                    alert('Error removing club: ' + error);
+                    window.location.href = "{{ url_for('edit_golf_clubs') }}";
+<!--                    alert('Error removing club: ' + error);-->
                 }
             });
 

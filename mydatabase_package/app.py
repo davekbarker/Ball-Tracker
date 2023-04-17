@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 import bcrypt
 import os
@@ -1353,33 +1354,26 @@ def user_chat():
     if 'username' in session:
         username = session['username']
         if request.method == 'POST':
-            # username = request.form['username']
-            # comment = request.form['comment']
-            # timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            if not os.path.exists(deployed + '/templates/public_user_chat.db'):
-                conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
-                c = conn.cursor()
-                c.execute('''CREATE TABLE comments
-                                 (username text, comment text, timestamp text)''')
-                conn.commit()
-                conn.close()
-
-            if request.method == 'POST':
-                # username = request.form['username']
-                comment = request.form['comment']
-                timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
-                c = conn.cursor()
-                c.execute('INSERT INTO comments VALUES (?, ?, ?)', (username, comment, timestamp))
-                conn.commit()
-                conn.close()
-
+            comment = request.form['comment']
+            timezone = pytz.timezone('America/Denver')
+            timestamp = datetime.datetime.now(timezone).strftime('%m-%d-%Y %I:%M:%S%p')
+            conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
+            c = conn.cursor()
+            c.execute('INSERT INTO comments VALUES (?, ?, ?)', (username, comment, timestamp))
+            conn.commit()
+            conn.close()
         conn = sqlite3.connect(deployed + '/templates/public_user_chat.db')
         c = conn.cursor()
-        c.execute('SELECT * FROM comments')
+        c.execute('''CREATE TABLE IF NOT EXISTS comments
+                                 (username text, comment text, timestamp text)''')
+        c.execute('''SELECT COUNT(*) FROM comments''')
+        if c.fetchone()[0] == 0:
+            c.execute('''INSERT INTO comments (username, comment, timestamp)
+                         VALUES (?, ?, ?)''', ('Dave', 'Welcome to the live chat! Use this page to chat about whatever you desire. Keep in mind it is public to all registered users and you are not currently allowed to edit or delete comments. I may change that, I may not. Any other suggestions you may have with the website please leave here.', '04-15-2023'))
+            conn.commit()
+        c.execute('SELECT * FROM comments ORDER BY timestamp')
         comments = c.fetchall()
         conn.close()
-
         return render_template('user_chat.html', username=username, comments=comments)
     else:
         return redirect(url_for('login'))

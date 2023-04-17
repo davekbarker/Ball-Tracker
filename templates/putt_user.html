@@ -101,6 +101,25 @@
         transition: opacity .2s;
       }
 
+      .directionOUT::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: black;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+
+      .directionOUT::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #4CAF50;
+        cursor: pointer;
+      }
+
+
       .pract-butts {
         background-color: #000000;
         color: white;
@@ -282,7 +301,7 @@ function refreshPracticeTable() {
       const table = document.getElementById('practice-table');
       table.innerHTML = ''; // clear the table rows before inserting new data
       const headerRow = table.insertRow(0);
-      headerRow.innerHTML = '<th>Actual Distance</th><th>Average Distance</th><th>Average Direction</th><th>Average Putt</th>';
+      headerRow.innerHTML = '<th>Pin Distance</th><th>Average Distance</th><th>Average Direction</th><th>Average Putt</th>';
 
       puttsData.forEach(rowData => {
         const actual_distance = rowData[0];

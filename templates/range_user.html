@@ -101,6 +101,28 @@
         transition: opacity .2s;
       }
 
+      .directionOUT::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: black;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .orange::-webkit-slider-thumb {
+        background-color: orange;
+      }
+
+      .yellow::-webkit-slider-thumb {
+        background-color: yellow;
+      }
+
+      .red::-webkit-slider-thumb {
+        background-color: red;
+      }
+
       .pract-butts {
         background-color: #000000;
         color: white;
@@ -248,7 +270,7 @@ function refreshPracticeTable() {
       const table = document.getElementById('practice-table');
       table.innerHTML = ''; // clear the table rows before inserting new data
       const headerRow = table.insertRow(0);
-      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Hits</th><th>Average Distance</th><th>Total Distance</th>';
+      headerRow.innerHTML = '<th>Club</th><th>Average Direction</th><th>Average Distance</th>';
 
       clubsData.forEach(rowData => {
         const id = rowData[0];
@@ -280,8 +302,16 @@ function refreshPracticeTable() {
 
 
 <!--        row.innerHTML = `<td>${club}</td><input type="range" min="0" max="100" value="${direction}" class="range-slide" style="width: 98%; background-color: white;"><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
-        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;
+<!--        row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${hits}</td><td>${average_distance}</td><td>${total_distance}</td>`;-->
 
+        // add a conditional statement to set the direction color based on its value
+        if (direction >= 39 && direction <= 62) {
+          row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT" style="width: 98%; background-color: white;" disabled></td><td>${average_distance}</td>`;
+        } else if ((direction >= 20 && direction <= 38) || (direction >= 63 && direction <= 80)) {
+          row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT orange" style="width: 98%; background-color: white;" disabled></td><td>${average_distance}</td>`;
+        } else if ((direction >= 0 && direction <= 19) || (direction >= 81 && direction <= 100)) {
+          row.innerHTML = `<td>${club}</td><td><input type="range" min="0" max="100" value="${direction}" class="directionOUT red" style="width: 98%; background-color: white;" disabled></td><td>${average_distance}</td>`;
+        }
       });
     });
 }

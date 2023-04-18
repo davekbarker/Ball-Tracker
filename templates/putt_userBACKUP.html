@@ -23,29 +23,55 @@
         border-radius: 15px;
       }
 
+
       .container h1 {
         text-align: center;
         font-size: 3rem;
-
+<!--        margin-top: 2rem;-->
       }
 
       .container h2 {
         text-align: center;
         font-size: 2rem;
-
+<!--        margin-top: 2rem;-->
       }
 
       .input-title {
         text-align: center;
         font-size: 2rem;
-
+<!--        margin-top: 2rem;-->
       }
 
       .direct-title {
         text-align: center;
         font-size: 2rem;
         padding-left: 42.5%;
+<!--        margin-top: 2rem;-->
+      }
 
+      .container p {
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+
+      .container ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .container ul li {
+        margin-bottom: 10px;
+      }
+
+      .container a {
+        color: #000;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .container a:hover {
+        color: #777;
       }
 
       .range-slide::-webkit-slider-thumb {
@@ -54,18 +80,14 @@
         background-color: white;
         border: 1px solid #ccc;
         border-radius: 50%;
-        transform: scale(3) rotate(90deg);
-        z-index: 0;
+        transform: scale(3);
+          z-index: 0;
       }
 
       .range-slide {
         -webkit-appearance: none;
         background-color: transparent;
         margin: 10 0 10px 0 !important;
-        writing-mode: bt-lr; /* For IE */
-        -webkit-appearance: slider-vertical;
-        height: 600px;
-        float: right !important;
       }
 
       .directionOUT {
@@ -89,12 +111,14 @@
         cursor: pointer;
       }
 
+
       .directionOUT::-moz-range-thumb {
         width: 20px;
         height: 20px;
         background: #4CAF50;
         cursor: pointer;
       }
+
 
       .pract-butts {
         background-color: #000000;
@@ -104,9 +128,8 @@
         border-radius: 15px;
         cursor: pointer;
         font-size: 55px;
-        width: 70% !important;
+        width: 100% !important;
         margin-bottom: 0 20px;
-        align: left;
       }
 
       .pract-butts:hover {
@@ -152,6 +175,29 @@
         color: black;
       }
 
+      .putt-butts-table {
+      width: 100%
+      }
+
+      .putt-butts {
+        background-color: #000000;
+        color: white;
+        padding: 35px 40px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 55px;
+        width: 100%;
+        margin-bottom: 0 20px;
+<!--        width: 100px; /* Adjust this value to the desired width */-->
+      }
+
+      .putt-butts:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+
     </style>
   </head>
   <body>
@@ -178,19 +224,26 @@
         <label for="direction" class="direct-title"><u><b>Direction</b></u></label>
         <br><br><br>
 <!--        <span style="font-size: 35px;"><b>L</b></span><input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span style="font-size: 35px;"><b>R</b></span><span style="position: absolute; top: -10px; left: 50%;">|</span>-->
-
-                <div style="position: relative; display: inline-block; float: right;">
+        <div style="position: relative; display: inline-block; width: 100%;">
             <span style="font-size: 35px;"><b>L</b></span>
-            <input type="range" name="direction" id="direction" class="range-slide" min="0" max="100" style="float: right;">
+            <input type="range" name="direction" id="direction" class="range-slide" min="0" max="100" style="width: 93%;">
             <span style="position: absolute; left: 49.7%; top: 60%; transform: translate(-50%, -50%); font-size: 35px;"><b>&#124;</b></span>
             <span style="font-size: 35px;"><b>R</b></span>
         </div>
 
-
 <!--        <input type="range" name="direction" id="direction" min="0" max="100" class="directionIN"><span class="vertical-line">|</span><span style="font-size: 35px;"><b>R</b></span>-->
         <br><br><br><br><br>
-        <input type="submit" value="Submit Shot" class="pract-butts">
-
+<!--        <input type="submit" value="Submit Shot" class="pract-butts">-->
+        <table class="putt-butts-table">
+            <tr>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="1">1 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="2">2 Putt</button></td>
+            </tr>
+            <tr>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="3">3 Putt</button></td>
+                <td><button type="submit" class="putt-butts" name="num_putts" value="4">4 Putt</button></td>
+            </tr>
+        </table>
 
     </form>
 
